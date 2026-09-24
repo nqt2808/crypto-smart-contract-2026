@@ -15,6 +15,7 @@
 ```text
 .
 ├── README.md                  # Giới thiệu tổng quan hồ sơ bài nộp Lab 1–7 và thông tin sinh viên
+├── EVIDENCE.md                # TỆP TỔNG HỢP TOÀN BỘ HÌNH ẢNH & MINH CHỨNG TRỰC QUAN (LAB 1 – LAB 7)
 ├── AGENTS.md                  # Bản quy ước dự án cho công cụ AI (Lab 1 & xuyên suốt học kỳ)
 ├── lab02.md                   # Báo cáo thực nghiệm 2 giao dịch on-chain thành công & thất bại (Lab 2)
 ├── forensics.md               # Báo cáo điều tra giao dịch và hợp đồng USDT/USDC trên Etherscan (Lab 3)
@@ -25,12 +26,12 @@
 ├── src/
 │   └── analyze_wallet.py      # Mã nguồn Python công cụ phân tích dòng tiền và vẽ biểu đồ số dư (Lab 6)
 └── evidence/                  # Thư mục lưu trữ hình ảnh và bằng chứng thực nghiệm
-    ├── lab-01/README.md       # Bằng chứng thiết lập môi trường, tài khoản và commit đầu tiên
-    ├── lab-02/README.md       # Chi tiết mã băm TxHash và kết quả kiểm thử trên Sepolia
-    ├── lab-03/README.md       # Dữ liệu phân tích Etherscan và cơ chế Proxy/Blacklist
-    └── lab-06/                # Kết quả chạy công cụ phân tích
-        ├── README.md
-        └── balance_chart.png  # Biểu đồ biến động số dư theo thời gian sinh ra từ mã nguồn
+    ├── lab-01/                # Minh chứng Lab 1 (README.md & antigravity_workspace.png)
+    ├── lab-02/                # Minh chứng Lab 2 (README.md & sepolia_transaction.png)
+    ├── lab-03/                # Minh chứng Lab 3 (README.md & etherscan_usdc_proxy.png)
+    ├── lab-04/                # Minh chứng Lab 4 (audit_clubtokens.png)
+    ├── lab-06/                # Minh chứng Lab 6 (README.md & balance_chart.png)
+    └── lab-07/                # Minh chứng Lab 7 (cost_comparison.png)
 ```
 
 ---
