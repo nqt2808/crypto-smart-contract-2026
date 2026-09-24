@@ -21,3 +21,9 @@
 ## 4. Bản ghi thay đổi đầu tiên (First Commit)
 - **Commit message:** `chore: thiet lap moi truong lam viec`
 - **Nhánh:** `main`
+- **Mã commit (Short Hash):** `3654c45`
+- **Đường dẫn commit trên GitHub:** [Commit 3654c45](https://github.com/nqt2808/crypto-smart-contract-2026/commit/3654c45)
+
+## 5. Ảnh màn hình Antigravity IDE đang mở kho mã nguồn
+![Antigravity Workspace](antigravity_workspace.png)
+

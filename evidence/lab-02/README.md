@@ -9,6 +9,8 @@
 - **Gas Price:** `15 Gwei`
 - **Phí giao dịch thực tế:** `0.000315 ETH`
 - **Đường dẫn Etherscan:** `https://sepolia.etherscan.io/tx/0x9a3e6f982d56a4b1234c9876e543210fedcba9876543210abcdef1234567890a`
+- **Ảnh chụp giao dịch trên Sepolia Etherscan:**
+![Sepolia Transaction Evidence](sepolia_transaction.png)
 
 ## 2. Giao dịch thất bại có chủ đích (Failed Tx)
 - **Tình huống:** Thử gửi toàn bộ số dư mà không chừa phí gas (Tình huống B).
@@ -16,3 +18,4 @@
 - **Trạng thái:** `Failed / Reverted`
 - **Ghi nhận thực tế:** Tiền chuyển không đi khỏi ví nhưng ví vẫn bị trừ chi phí tính toán gas fee.
 - **Báo cáo chi tiết:** Xem tại tệp `lab02.md`.
+
