@@ -281,7 +281,7 @@ def plot_balance_chart(summary, target_address: str, output_path: str):
 
 def main():
     parser = argparse.ArgumentParser(description="Cong cu phan tich dong tien vi Ethereum (Lab 6)")
-    parser.add_argument("--address", default="0x71C6c6533036814E80882e5b7D005a769Eb1B69a", help="Dia chi vi can phan tich")
+    parser.add_argument("--address", default="0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c", help="Dia chi vi can phan tich")
     parser.add_argument("--days", type=int, default=90, help="So ngay phan tich")
     parser.add_argument("--network", default="sepolia", help="Mang blockchain (sepolia hoac mainnet)")
     parser.add_argument("--output", default="evidence/lab-06/balance_chart.png", help="Duong dan luu anh bieu do")

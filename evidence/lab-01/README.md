@@ -4,7 +4,7 @@
 - **Họ và Tên:** Ngô Quỳnh Trang
 - **Mã Sinh Viên:** 23K4300041
 - **Lớp:** K57 Kinh tế Số - Khoa Hệ thống Thông tin Kinh tế, Trường Đại học Kinh tế - Đại học Huế
-- **Địa chỉ ví MetaMask (Sepolia):** `0x71C6c6533036814E80882e5b7D005a769Eb1B69a`
+- **Địa chỉ ví MetaMask (Sepolia):** `0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c`
 - **Số dư khởi tạo từ Sepolia Faucet:** `1.50 Sepolia ETH`
 
 ## 2. Kiểm tra công cụ lập trình AI (Antigravity)

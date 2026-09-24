@@ -4,7 +4,7 @@
 - **Họ và Tên Sinh Viên:** Ngô Quỳnh Trang
 - **Mã số sinh viên (MSSV):** 23K4300041
 - **Lớp / Khóa:** K57 Kinh tế Số - Khoa Hệ thống Thông tin Kinh tế, Trường Đại học Kinh tế - Đại học Huế
-- **Địa chỉ ví thực hành (Sepolia):** `0x71C6c6533036814E80882e5b7D005a769Eb1B69a`
+- **Địa chỉ ví thực hành (Sepolia):** `0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c`
 - **Kho lưu trữ GitHub:** [crypto-smart-contract-2026](https://github.com/nqt2808/crypto-smart-contract-2026)
 
 ---

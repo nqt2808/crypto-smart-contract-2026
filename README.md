@@ -4,7 +4,7 @@
 - **Sinh viên thực hiện:** Ngô Quỳnh Trang
 - **Mã số sinh viên (MSSV):** 23K4300041
 - **Lớp / Khóa:** K57 Kinh tế Số - Khoa Hệ thống Thông tin Kinh tế, Trường Đại học Kinh tế - Đại học Huế
-- **Địa chỉ ví MetaMask (Sepolia Testnet):** `0x71C6c6533036814E80882e5b7D005a769Eb1B69a`
+- **Địa chỉ ví MetaMask (Sepolia Testnet):** `0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c`
 - **Công cụ phát triển:** Antigravity IDE (Google DeepMind)
 - **Hạn hoàn thành Lab cá nhân:** 23:59, Thứ Ba 29/09/2026
 
@@ -101,7 +101,7 @@
 
 3. **Chạy phân tích dòng tiền:**
    ```bash
-   python src/analyze_wallet.py --address 0x71C6c6533036814E80882e5b7D005a769Eb1B69a --days 90
+   python src/analyze_wallet.py --address 0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c --days 90
    ```
    *(Nếu không đặt API Key, hệ thống tự động chạy tập dữ liệu kiểm thử Mock Dataset đạt chuẩn 100% đặc tả).*
 
