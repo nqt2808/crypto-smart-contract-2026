@@ -1,6 +1,6 @@
 # BÁO CÁO ĐIỀU TRA ON-CHAIN: FORENSICS.MD
 **Học phần:** Tiền điện tử & Hợp đồng thông minh (ECO2432)  
-**Sinh viên thực hiện:** [Họ và Tên Sinh Viên] - MSSV: [Mã Sinh Viên]  
+**Sinh viên thực hiện:** Ngô Quỳnh Trang - MSSV: 23K4300041 (K57 Kinh tế Số)  
 **Bài thực hành:** Lab 3 — Đọc giao dịch và hợp đồng trên Etherscan  
 
 ---

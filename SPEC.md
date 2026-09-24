@@ -1,6 +1,6 @@
 # BẢN ĐẶC TẢ YÊU CẦU NGHIỆP VỤ — CÔNG CỤ PHÂN TÍCH DÒNG TIỀN ON-CHAIN (SPEC.MD)
 **Mã bài:** Lab 5 (Tiền điện tử & Hợp đồng thông minh - ECO2432)  
-**Tác giả:** [Họ và Tên Sinh Viên] - MSSV: [Mã Sinh Viên]  
+**Tác giả:** Ngô Quỳnh Trang - MSSV: 23K4300041 (K57 Kinh tế Số)  
 **Vai trò:** Chuyên viên Phân tích Nghiệp vụ (Business Analyst - BA)  
 **Phiên bản:** v1.1 (Đã qua kiểm tra chéo và chuẩn hóa)  
 

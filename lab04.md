@@ -1,6 +1,6 @@
 # BÁO CÁO THẨM ĐỊNH RỦI RO HỢP ĐỒNG THÔNG MINH (LAB 4)
 **Học phần:** Tiền điện tử & Hợp đồng thông minh (ECO2432)  
-**Sinh viên thực hiện:** [Họ và Tên Sinh Viên] - MSSV: [Mã Sinh Viên]  
+**Sinh viên thực hiện:** Ngô Quỳnh Trang - MSSV: 23K4300041 (K57 Kinh tế Số)  
 **Tệp mã nguồn thẩm định:** `contracts/lab04/ClubTokens.sol`  
 **Vai trò:** Chuyên viên thẩm định rủi ro tài sản số (Risk Assessment Specialist)  
 

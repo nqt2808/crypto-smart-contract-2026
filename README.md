@@ -1,9 +1,9 @@
 # BÁO CÁO KHO MÃ NGUỒN CÁ NHÂN (LAB 1 – LAB 7)
 ## HỌC PHẦN: TIỀN ĐIỆN TỬ & HỢP ĐỒNG THÔNG MINH (ECO2432)
 
-- **Sinh viên thực hiện:** [Họ và Tên Sinh Viên]
-- **Mã số sinh viên (MSSV):** [Mã Sinh Viên]
-- **Lớp / Khóa:** K58 - Khoa Hệ thống Thông tin Kinh tế, Trường Đại học Kinh tế - Đại học Huế
+- **Sinh viên thực hiện:** Ngô Quỳnh Trang
+- **Mã số sinh viên (MSSV):** 23K4300041
+- **Lớp / Khóa:** K57 Kinh tế Số - Khoa Hệ thống Thông tin Kinh tế, Trường Đại học Kinh tế - Đại học Huế
 - **Địa chỉ ví MetaMask (Sepolia Testnet):** `0x71C6c6533036814E80882e5b7D005a769Eb1B69a`
 - **Công cụ phát triển:** Antigravity IDE (Google DeepMind)
 - **Hạn hoàn thành Lab cá nhân:** 23:59, Thứ Ba 29/09/2026
@@ -110,7 +110,7 @@
 ## 🤝 ĐĂNG KÝ CẶP ĐÔI VÀ CHỦ ĐỀ ĐỒ ÁN (LAB 8 – LAB 15)
 *(Đáp ứng yêu cầu Mục 2 của Giảng viên - Hạn: Thứ Bảy 26/09/2026)*
 
-- **Thành viên 1:** [Họ và Tên SV 1] - MSSV: [Mã SV 1]
+- **Thành viên 1:** Ngô Quỳnh Trang - MSSV: 23K4300041
 - **Thành viên 2:** [Họ và Tên SV 2] - MSSV: [Mã SV 2]
 - **Chủ đề lựa chọn:** **Chủ đề 1 (Ký quỹ mua bán đồ cũ KTX)** trong Danh mục 10 chủ đề ở Phần N của Sổ tay.
 - **Tên dự kiến của sản phẩm:** **CampusEscrow** (Hệ thống ký quỹ mua bán P2P cho sinh viên ký túc xá).

@@ -1,6 +1,6 @@
 # NHẬT KÝ LÀM VIỆC VỚI CÔNG CỤ AI (AI_JOURNAL.MD)
 **Học phần:** Tiền điện tử & Hợp đồng thông minh (ECO2432)  
-**Sinh viên thực hiện:** [Họ và Tên Sinh Viên] - MSSV: [Mã Sinh Viên]  
+**Sinh viên thực hiện:** Ngô Quỳnh Trang - MSSV: 23K4300041 (K57 Kinh tế Số)  
 **Công cụ AI sử dụng:** Antigravity AI Assistant (Google DeepMind)  
 
 ---

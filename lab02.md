@@ -1,6 +1,6 @@
 # BÁO CÁO THỰC HÀNH LAB 2 — VÍ VÀ GIAO DỊCH ĐẦU TIÊN
 **Học phần:** Tiền điện tử & Hợp đồng thông minh (ECO2432)  
-**Sinh viên thực hiện:** [Họ và Tên Sinh Viên] - MSSV: [Mã Sinh Viên]  
+**Sinh viên thực hiện:** Ngô Quỳnh Trang - MSSV: 23K4300041 (K57 Kinh tế Số)  
 **Mạng thử nghiệm:** Ethereum Sepolia Testnet  
 **Địa chỉ ví cá nhân:** `0x71C6c6533036814E80882e5b7D005a769Eb1B69a`  
 **Địa chỉ ví đối tác (bạn cùng lớp):** `0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f`  

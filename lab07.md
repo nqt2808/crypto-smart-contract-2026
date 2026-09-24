@@ -1,6 +1,6 @@
 # BÁO CÁO ĐÁNH GIÁ HIỆU QUẢ KINH TẾ VÀ CHI PHÍ VẬN HÀNH THỰC TẾ (LAB 7)
 **Học phần:** Tiền điện tử & Hợp đồng thông minh (ECO2432)  
-**Sinh viên thực hiện:** [Họ và Tên Sinh Viên] - MSSV: [Mã Sinh Viên]  
+**Sinh viên thực hiện:** Ngô Quỳnh Trang - MSSV: 23K4300041 (K57 Kinh tế Số)  
 **Bài thực hành:** Lab 7 — Phân tích chi phí vận hành on-chain và tính khả thi dự án  
 
 ---

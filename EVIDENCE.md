@@ -1,9 +1,9 @@
 # HỒ SƠ TỔNG HỢP HÌNH ẢNH & MINH CHỨNG THỰC HÀNH (EVIDENCE.MD)
 ## HỌC PHẦN: TIỀN ĐIỆN TỬ & HỢP ĐỒNG THÔNG MINH (ECO2432)
 
-- **Họ và Tên Sinh Viên:** [Họ và Tên Sinh Viên]
-- **Mã số sinh viên (MSSV):** [Mã Sinh Viên]
-- **Lớp / Khóa:** K58 - Hệ thống Thông tin Kinh tế, Đại học Kinh tế - Đại học Huế
+- **Họ và Tên Sinh Viên:** Ngô Quỳnh Trang
+- **Mã số sinh viên (MSSV):** 23K4300041
+- **Lớp / Khóa:** K57 Kinh tế Số - Khoa Hệ thống Thông tin Kinh tế, Trường Đại học Kinh tế - Đại học Huế
 - **Địa chỉ ví thực hành (Sepolia):** `0x71C6c6533036814E80882e5b7D005a769Eb1B69a`
 - **Kho lưu trữ GitHub:** [crypto-smart-contract-2026](https://github.com/nqt2808/crypto-smart-contract-2026)
 
