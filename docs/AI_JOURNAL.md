@@ -31,7 +31,26 @@ AI tạo ra cấu trúc cơ bản khá tốt gồm 4 trạng thái (`Created`, `
 
 ## Lab 9 — Hợp đồng lõi đầu tiên (Biên dịch và đo gas)
 
-*(Sẽ cập nhật tại Lab 9)*
+### 1. Prompt yêu cầu AI sinh mã cho ProjectCore.sol
+> *"Hãy viết hợp đồng Solidity CampusEscrow theo đặc tả docs/SPEC.md, tuân thủ nghiêm ngặt AGENTS.md. Giải thích lựa chọn thiết kế trước khi đưa mã nguồn."*
+
+### 2. Phân tích kết quả do AI sinh ra và Lỗi phát hiện
+- **Lỗi 1 (Sai phiên bản Solidity & cú pháp cũ):**
+  - *Mô tả:* AI ban đầu đề xuất `pragma solidity ^0.8.0;` và dùng hàm `transfer` để chuyển ETH cho người bán.
+  - *Phát hiện bởi:* Sinh viên (đối chiếu quy tắc 4 trong `AGENTS.md`).
+  - *Cách khắc phục:* Yêu cầu AI nâng cấp lên `pragma solidity ^0.8.20;` và đổi sang dùng `.call{value: amount}("")` kèm điều kiện `if (!ok) revert TransferFailed();`.
+- **Lỗi 2 (Thiếu kiểm tra người bán tự mua):**
+  - *Mô tả:* Hàm `fund()` ban đầu của AI cho phép bất kỳ ai nạp tiền, kể cả người bán.
+  - *Phát hiện bởi:* Sinh viên (dựa trên phản biện đối kháng tại Lab 8).
+  - *Cách khắc phục:* Bổ sung dòng kiểm tra `if (msg.sender == seller) revert BuyerCannotBeSeller();`.
+- **Lỗi 3 (Thứ tự thực hiện chưa triệt để):**
+  - *Mô tả:* Trong hàm `confirmReceived()`, AI tính toán `amount = address(this).balance` sau khi gọi event nhưng trước khi đổi trạng thái `state = State.Completed`.
+  - *Phát hiện bởi:* Sinh viên (tuân thủ Checks-Effects-Interactions).
+  - *Cách khắc phục:* Chuyển biến trạng thái `state = State.Completed` trước tiên trong bước Effects, sau đó mới phát event và gọi lệnh `call`.
+
+### 3. Kết quả biên dịch và thử nghiệm
+Hợp đồng `CampusEscrow` biên dịch không lỗi (0 warnings, 0 errors) trên trình biên dịch `solc 0.8.20`. Hoàn thành triển khai thử nghiệm trên Remix VM và ghi nhận bảng chi phí gas chi tiết tại `evidence/lab-09/README.md`.
+
 
 ---
 
