@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-/// @title CampusEscrow - Hop dong ky quy mua ban do cu KTX sinh vien
-/// @notice Core Escrow contract for dormitory secondhand item trading
+/// @title CampusEscrow - Hop dong ky quy mua ban do cu KTX sinh vien (Co thu phi quy KTX)
+/// @notice Core Escrow contract for dormitory secondhand item trading with 1% KTX fee
 contract CampusEscrow {
     enum State {
         Created,
@@ -13,6 +13,8 @@ contract CampusEscrow {
 
     // Bien trang thai bat bien va luu tru
     address public immutable seller;
+    address public immutable feeRecipient; // Vi quy KTX nhan phi duy tri
+    uint256 public constant feeBps = 100;   // 100 diem co ban = 1.00%
     address public buyer;
     uint256 public immutable price;
     uint256 public immutable daysToConfirm;
@@ -20,14 +22,16 @@ contract CampusEscrow {
     State public state;
 
     // Su kien on-chain
-    event Created(address indexed seller, uint256 price, uint256 daysToConfirm);
+    event Created(address indexed seller, uint256 price, uint256 daysToConfirm, address indexed feeRecipient);
     event Funded(address indexed buyer, uint256 amount, uint256 deadline);
-    event Completed(address indexed seller, uint256 amount);
-    event Refunded(address indexed buyer, uint256 amount);
+    event FeeCollected(address indexed recipient, uint256 feeAmount);
+    event Completed(address indexed seller, uint256 sellerAmount);
+    event Refunded(address indexed buyer, uint256 refundAmount);
 
     // Dinh danh loi tuy bien (Custom Errors)
     error InvalidAddress();
     error ZeroPrice();
+    error PriceTooLow(uint256 minPrice);
     error InvalidDuration(uint256 min, uint256 max);
     error WrongState(State expected, State current);
     error WrongAmount(uint256 expected, uint256 sent);
@@ -38,21 +42,29 @@ contract CampusEscrow {
     error DeadlineNotReached(uint256 unlockTime, uint256 currentTime);
     error TransferFailed();
 
-    /// @notice Khoi tao don hang ky quy mua ban do cu
-    /// @param _seller Dia chi vi nguoi ban do
-    /// @param _price Gia niem yet cua san pham (wei)
-    /// @param _daysToConfirm So ngay nguoi mua co de kiem tra va xac nhan (1 den 14 ngay)
-    constructor(address _seller, uint256 _price, uint256 _daysToConfirm) {
-        if (_seller == address(0)) revert InvalidAddress();
+    /// @notice Khoi tao don hang ky quy mua ban do cu KTX
+    /// @param _seller Dia chi vi nguoi ban
+    /// @param _price Gia niem yet cua san pham (wei, toi thieu 10,000 wei de tinh phi)
+    /// @param _daysToConfirm So ngay nguoi mua co de kiem tra hang (1 den 14 ngay)
+    /// @param _feeRecipient Dia chi vi quy tu quan KTX
+    constructor(
+        address _seller,
+        uint256 _price,
+        uint256 _daysToConfirm,
+        address _feeRecipient
+    ) {
+        if (_seller == address(0) || _feeRecipient == address(0)) revert InvalidAddress();
         if (_price == 0) revert ZeroPrice();
+        if (_price < 10_000) revert PriceTooLow(10_000);
         if (_daysToConfirm < 1 || _daysToConfirm > 14) revert InvalidDuration(1, 14);
 
         seller = _seller;
         price = _price;
         daysToConfirm = _daysToConfirm;
+        feeRecipient = _feeRecipient;
         state = State.Created;
 
-        emit Created(_seller, _price, _daysToConfirm);
+        emit Created(_seller, _price, _daysToConfirm, _feeRecipient);
     }
 
     /// @notice Nguoi mua khoa tien coc vao hop dong
@@ -70,24 +82,32 @@ contract CampusEscrow {
         emit Funded(msg.sender, msg.value, deadline);
     }
 
-    /// @notice Nguoi mua xac nhan da nhan do, tien ve tay nguoi ban
+    /// @notice Nguoi mua xac nhan da nhan do, tien duoc phan bo cho seller va quy KTX
     function confirmReceived() external {
         // 1. Checks
         if (state != State.Funded) revert WrongState(State.Funded, state);
         if (msg.sender != buyer) revert NotBuyer();
 
-        // 2. Effects (Cap nhat trang thai truoc khi chuyen tien)
+        // 2. Effects (Checks-Effects-Interactions: Cap nhat trang thai truoc)
         state = State.Completed;
-        uint256 amount = price;
 
-        emit Completed(seller, amount);
+        uint256 fee = (price * feeBps) / 10_000;
+        uint256 sellerAmount = price - fee;
+
+        emit FeeCollected(feeRecipient, fee);
+        emit Completed(seller, sellerAmount);
 
         // 3. Interactions (Chuyen tien ra ngoai sau cung)
-        (bool ok, ) = payable(seller).call{value: amount}("");
-        if (!ok) revert TransferFailed();
+        if (fee > 0) {
+            (bool feeOk, ) = payable(feeRecipient).call{value: fee}("");
+            if (!feeOk) revert TransferFailed();
+        }
+
+        (bool sellerOk, ) = payable(seller).call{value: sellerAmount}("");
+        if (!sellerOk) revert TransferFailed();
     }
 
-    /// @notice Qua han xac nhan ma chua hoan tat thi hoan tien cho nguoi mua
+    /// @notice Qua han xac nhan ma chua hoan tat thi hoan tien 100% cho nguoi mua
     function refundAfterDeadline() external {
         // 1. Checks
         if (state != State.Funded) revert WrongState(State.Funded, state);
@@ -96,12 +116,12 @@ contract CampusEscrow {
 
         // 2. Effects
         state = State.Refunded;
-        uint256 amount = price;
+        uint256 refundAmount = price;
 
-        emit Refunded(buyer, amount);
+        emit Refunded(buyer, refundAmount);
 
         // 3. Interactions
-        (bool ok, ) = payable(buyer).call{value: amount}("");
+        (bool ok, ) = payable(buyer).call{value: refundAmount}("");
         if (!ok) revert TransferFailed();
     }
 
