@@ -180,6 +180,24 @@ class TestCampusEscrow(unittest.TestCase):
         print(f" -> Hoan tra 100% cho nguoi mua: {escrow.balances[self.buyer] / 10**18} ETH")
         print(" -> Ket qua: HOAN TIEN THANH CONG!")
 
+    def test_case_07_reentrancy_attack_attempt_blocked(self):
+        """Ca vi pham: Thu tan cong tai nhap Reentrancy khi rut tien hoac giai ngan."""
+        print("\n[TEST 7] Chay ca vi pham: Thu tan cong tai nhap (Reentrancy)...")
+        escrow = CampusEscrowSimulator(self.seller, self.price, 3, self.fee_fund)
+        escrow.fund(sender=self.buyer, value=self.price)
+
+        # Goi confirm_received lan 1 -> trang thai chuyen thanh Completed
+        escrow.confirm_received(sender=self.buyer)
+        self.assertEqual(escrow.state, CampusEscrowSimulator.STATE_COMPLETED)
+
+        # Co tinh goi lai lan 2 (Reentrancy de quy)
+        with self.assertRaises(RuntimeError) as ctx:
+            escrow.confirm_received(sender=self.buyer)
+        self.assertIn("WrongState", str(ctx.exception))
+        print(" -> Bi chan dung lap tuc boi CEI voi loi: WrongState(Expected=Funded, Current=Completed)")
+        print(" -> Ket qua: PHONG THU REENTRANCY THANH CONG 100%!")
+
 
 if __name__ == "__main__":
     unittest.main()
+
