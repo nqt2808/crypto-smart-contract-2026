@@ -51,3 +51,18 @@ Tuân thủ quy định tại Trang 19-20 của Sổ tay Thực hành ECO2432, c
 | **Lab 13** | Phòng chống tấn công Reentrancy & Hardening | `Attacker.sol`, minh chứng rút cạn 6 ETH -> 0 ETH, 2 cách vá, negative test | Ngô Quỳnh Trang |
 | **Lab 14** | Rà soát chéo giữa các nhóm | `docs/AUDIT_REPORT.md` (10 tiêu chí), xử lý và vá lỗi | Ngô Quỳnh Trang |
 | **Lab 15** | Giao diện Web DApp & Đưa lên mạng | Giao diện DApp `web/index.html` chạy public, `docs/PRESENTATION_PLAN.md`, tag `v0.1-demo` | Lê Thị Phương Thảo |
+
+---
+
+## 5. Phạm vi sau Cổng duyệt 1 (Post Gate Review 1 Scope)
+
+Tuân thủ quyết định của Cổng duyệt 1 tại [docs/GATE_REVIEW_1.md](docs/GATE_REVIEW_1.md):
+- **Phạm vi được duyệt chính thức:**
+  - Tập trung 100% vào luồng Ký quỹ mua bán P2P đơn lẻ (1 người bán - 1 người mua).
+  - Quy tắc kinh tế: Trích 1% phí phúc lợi KTX (`feeBps = 100`) cho `feeRecipient`.
+  - Cơ chế tự bảo vệ: Hoàn tiền 100% không mất phí sau hạn chót `deadline` nếu đơn hàng bị bỏ rơi.
+  - Giao diện DApp người dùng bằng HTML/JS/CSS kết nối MetaMask trên Sepolia.
+- **Phạm vi đã cắt giảm (Out of Scope):**
+  - Đấu giá đồ cũ (Auction) và giỏ hàng nhiều món (Multi-item cart).
+  - Trọng tài phân xử đa chữ ký (Multi-sig arbitration).
+
