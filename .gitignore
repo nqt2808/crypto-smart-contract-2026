@@ -12,3 +12,9 @@ ENV/
 Thumbs.db
 .vscode/
 .idea/
+
+# Scratch & extracted notes
+pdf_full_labs.txt
+pdf_summary.txt
+scratch/
+

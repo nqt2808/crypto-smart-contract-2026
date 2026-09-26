@@ -107,12 +107,21 @@
 
 ---
 
-## 🤝 ĐĂNG KÝ CẶP ĐÔI VÀ CHỦ ĐỀ ĐỒ ÁN (LAB 8 – LAB 15)
-*(Đáp ứng yêu cầu Mục 2 của Giảng viên - Hạn: Thứ Bảy 26/09/2026)*
+## 🤝 THÔNG TIN NHÓM VÀ ĐỒ ÁN CHUNG (LAB 8 – LAB 15)
 
-- **Thành viên 1:** Ngô Quỳnh Trang - MSSV: 23K4300041
-- **Thành viên 2:** [Họ và Tên SV 2] - MSSV: [Mã SV 2]
-- **Chủ đề lựa chọn:** **Chủ đề 1 (Ký quỹ mua bán đồ cũ KTX)** trong Danh mục 10 chủ đề ở Phần N của Sổ tay.
-- **Tên dự kiến của sản phẩm:** **CampusEscrow** (Hệ thống ký quỹ mua bán P2P cho sinh viên ký túc xá).
-- **Câu mô tả sản phẩm theo mẫu quy định:**
-  > *"Nhóm xây dựng **CampusEscrow** cho **sinh viên nội trú ký túc xá** để **bảo đảm an toàn giao dịch mua bán đồ cũ, chống bùng cọc và lừa đảo chuyển tiền trước khi nhận hàng**."*
+- **Chủ đề lựa chọn:** **Chủ đề 1 — Ký quỹ mua bán đồ cũ ký túc xá** (Phần N — Sổ tay Thực hành ECO2432)
+- **Tên sản phẩm chính thức:** **CampusEscrow** (Nền tảng P2P Escrow an toàn cho sinh viên KTX)
+- **Danh sách thành viên nhóm:**
+  1. **Ngô Quỳnh Trang** (Trưởng nhóm) — MSSV: `23K4300041` — Ví: `0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c`
+  2. **Lê Thị Phương Thảo** — MSSV: `23K4300052` — Ví: `0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f`
+- **Câu tuyên ngôn sản phẩm:**
+  > *"Nhóm xây dựng **CampusEscrow** cho **sinh viên nội trú Ký túc xá** để **giao dịch mua bán đồ dùng sinh hoạt đã qua sử dụng an toàn, minh bạch, loại trừ hoàn toàn rủi ro bị bùng cọc hoặc quỵt tiền khi nhận hàng**."*
+
+### 📑 Danh mục tài liệu đồ án nhóm:
+- [docs/PROJECT_PLAN.md](docs/PROJECT_PLAN.md) — Kế hoạch dự án và phân công vai trò xoay vòng
+- [docs/SPEC.md](docs/SPEC.md) — Đặc tả kỹ thuật v0.1 và máy trạng thái hợp đồng
+- [docs/ECONOMIC_RULES.md](docs/ECONOMIC_RULES.md) — Quy tắc kinh tế, dòng tiền và 5 phản biện đối kháng
+- [docs/AI_JOURNAL.md](docs/AI_JOURNAL.md) — Nhật ký làm việc với AI giai đoạn đồ án nhóm
+- [contracts/project/ProjectCore.sol](contracts/project/ProjectCore.sol) — Hợp đồng thông minh lõi
+- [web/index.html](web/index.html) — Giao diện DApp kết nối Web3
+
