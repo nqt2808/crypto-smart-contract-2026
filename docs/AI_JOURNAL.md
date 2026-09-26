@@ -56,5 +56,24 @@ Hợp đồng `CampusEscrow` biên dịch không lỗi (0 warnings, 0 errors) tr
 
 ## Lab 10 — Rà soát mã nguồn do AI sinh ra
 
-*(Bảng bắt buộc 4 cột: Lỗi | Mô tả | Ai phát hiện | Cách khắc phục)*
-*(Sẽ cập nhật tại Lab 10)*
+### 1. Bảng bắt buộc phân tích lỗi VaultBuggy.sol (Chấm điểm chính thức)
+
+| Lỗi | Mô tả | Ai phát hiện | Cách khắc phục |
+|---|---|---|---|
+| **1** | **Lộ mã PIN qua Storage Slot:** Thuộc tính `private` không mã hóa dữ liệu; gọi RPC `eth_getStorageAt(addr, "0x2", "latest")` đọc được mã PIN nguyên vẹn (`123456`). | **Sinh viên** | Không lưu trữ bí mật dạng plaintext lên blockchain; dùng cơ chế hash commit-reveal hoặc ZKP. |
+| **2** | **Đảo ngược điều kiện thời gian:** `require(block.timestamp <= unlockTime)` làm tiền bị kẹt vĩnh viễn sau hạn chót mở két. | **AI & Sinh viên** | Đổi dấu thành `>= unlockTime` hoặc dùng custom error `StillLocked`. |
+| **3** | **Thiếu phân quyền rút tiền:** Hàm `withdraw()` cho phép bất kỳ ai gọi và chuyển tiền cho `msg.sender` thay vì `owner`. | **AI & Sinh viên** | Thêm điều kiện `if (msg.sender != owner) revert NotOwner();` và chuyển về `payable(owner)`. |
+| **4** | **Bẫy Gas `transfer` & Thiếu Event:** Dùng `.transfer()` có thể gây DoS khi bên nhận là contract/multisig và không phát Event khi thay đổi số dư. | **Sinh viên** *(Điểm cộng)* | Dùng `.call{value: balance}("")` có kiểm tra kết quả `ok` và phát các Event `Deposited`, `Withdrawn`. |
+
+### 2. Phát hiện và sửa lỗi trên hợp đồng dự án ProjectCore.sol
+- **Phát hiện 1 (Rủi ro vét cạn số dư thay vì thanh toán đúng giá niêm yết):**
+  - *Vị trí:* Dòng 76 và dòng 94 trong `ProjectCore.sol`.
+  - *Mô tả:* Lệnh `uint256 amount = address(this).balance` có thể bị thao túng nếu có ai đó chuyển ETH ngoài luồng qua `selfdestruct`.
+  - *Ai phát hiện:* Sinh viên & AI.
+  - *Cách khắc phục:* Đổi thành `uint256 amount = price;` để đảm bảo tính toàn vẹn và bất biến của đơn hàng.
+- **Phát hiện 2 (Bổ sung kiểm soát quyền hủy/hoàn tiền):**
+  - *Vị trí:* Dòng 88 hàm `refundAfterDeadline()`.
+  - *Mô tả:* Không giới hạn người gọi hoàn tiền, có thể bị bot kích hoạt ngoài ý muốn.
+  - *Ai phát hiện:* Sinh viên.
+  - *Cách khắc phục:* Thêm kiểm tra `if (msg.sender != buyer && msg.sender != seller) revert NotAuthorized();`.
+

@@ -33,6 +33,7 @@ contract CampusEscrow {
     error WrongAmount(uint256 expected, uint256 sent);
     error NotBuyer();
     error NotSeller();
+    error NotAuthorized();
     error BuyerCannotBeSeller();
     error DeadlineNotReached(uint256 unlockTime, uint256 currentTime);
     error TransferFailed();
@@ -77,7 +78,7 @@ contract CampusEscrow {
 
         // 2. Effects (Cap nhat trang thai truoc khi chuyen tien)
         state = State.Completed;
-        uint256 amount = address(this).balance;
+        uint256 amount = price;
 
         emit Completed(seller, amount);
 
@@ -90,11 +91,12 @@ contract CampusEscrow {
     function refundAfterDeadline() external {
         // 1. Checks
         if (state != State.Funded) revert WrongState(State.Funded, state);
+        if (msg.sender != buyer && msg.sender != seller) revert NotAuthorized();
         if (block.timestamp < deadline) revert DeadlineNotReached(deadline, block.timestamp);
 
         // 2. Effects
         state = State.Refunded;
-        uint256 amount = address(this).balance;
+        uint256 amount = price;
 
         emit Refunded(buyer, amount);
 
