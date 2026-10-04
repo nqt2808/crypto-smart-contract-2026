@@ -14,7 +14,7 @@ Tuân thủ quy định tại Trang 19-20 của Sổ tay Thực hành ECO2432, c
 
 | Họ và tên | Mã sinh viên | Địa chỉ ví cá nhân | Vai chính Lab 8–11 | Vai chính Lab 12–15 |
 |---|---|---|---|---|
-| **Ngô Quỳnh Trang** (Trưởng nhóm) | `23K4300041` | `0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c` | **Đặc tả nghiệp vụ & Kinh tế**<br>- Viết `SPEC.md`, `ECONOMIC_RULES.md`<br>- Thiết kế máy trạng thái và luồng tài chính | **Kiểm thử bảo mật & Báo cáo**<br>- Viết ca kiểm thử gian lận (Negative Tests)<br>- Thực hiện Audit chéo và kịch bản thuyết trình |
+| **Ngô Quỳnh Trang** | `23K4300041` | `0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c` | **Đặc tả nghiệp vụ & Kinh tế**<br>- Viết `SPEC.md`, `ECONOMIC_RULES.md`<br>- Thiết kế máy trạng thái và luồng tài chính | **Kiểm thử bảo mật & Báo cáo**<br>- Viết ca kiểm thử gian lận (Negative Tests)<br>- Thực hiện Audit chéo và kịch bản thuyết trình |
 | **Lê Thị Phương Thảo** | `23K4300052` | `0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f` | **Lập trình Hợp đồng lõi**<br>- Viết `ProjectCore.sol` (Solidity ^0.8.20)<br>- Tối ưu hóa Gas và kiểm soát lỗi | **Phát triển Giao diện DApp & Web3**<br>- Phát triển giao diện người dùng `web/index.html`<br>- Tích hợp Ethers.js, MetaMask và GitHub Pages |
 
 ---

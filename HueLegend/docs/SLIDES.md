@@ -10,8 +10,8 @@
 - **Tiêu đề lớn:** HUELEGEND — BẢO CHỨNG NGUỒN GỐC ĐẶC SẢN CỐ ĐÔ HUẾ TRÊN BLOCKCHAIN
 - **Đề tài:** Chủ đề 10 (Chuỗi cung ứng & Truy xuất nguồn gốc OCOP)
 - **Thành viên nhóm:**
-  - **Ngô Thị Thủy Vân (MSSV: 23K4300068):** Trưởng nhóm, Quản trị Sản phẩm & Frontend Web3 DApp.
-  - **Thành viên 2 (Kỹ thuật):** Kỹ sư Hợp đồng thông minh, Kiểm thử bảo mật & Tối ưu Gas.
+  - **Ngô Thị Thủy Vân (MSSV: 23K4300068):** Thành viên, Quản trị Sản phẩm & Frontend Web3 DApp.
+  - **Ngô Quỳnh Trang (MSSV: 23K4300041):** Thành viên, Kỹ sư Hợp đồng thông minh & An ninh On-chain (Ví: `0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c`).
 - **Tuyên ngôn định danh sản phẩm (Value Proposition):**  
   > *"Số hóa và bảo chứng tính nguyên bản của đặc sản Huế thông qua chuỗi khối phân tán bất biến — Quét mã QR, an tâm chất lượng chuẩn di sản."*
 - **Hình ảnh / Biểu tượng:** Logo Cung đình Huế kết hợp biểu tượng khối Blockchain & Mã phản hồi QR.

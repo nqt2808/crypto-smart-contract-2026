@@ -1,7 +1,7 @@
 """
 Unit Test Suite for HueLegend Smart Contract
 Hoc phan: Tien dien tu & Hop dong thong minh (ECO2432)
-Tac gia: Nhom sinh vien HueLegend (Ngo Thi Thuy Van & Thanh vien ky thuat)
+Tac gia: Nhom sinh vien HueLegend (Ngo Thi Thuy Van & Ngo Quynh Trang (MSSV: 23K4300041))
 """
 
 import unittest

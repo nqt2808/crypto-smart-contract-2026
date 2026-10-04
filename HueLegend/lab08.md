@@ -2,7 +2,7 @@
 
 - **Học phần:** Tiền điện tử & Hợp đồng thông minh (ECO2432)
 - **Tên dự án:** HueLegend (Đề tài 10 — Truy xuất nguồn gốc chuỗi cung ứng)
-- **Nhóm thực hiện:** Ngô Thị Thủy Vân & Thành viên 2 (Kỹ thuật)
+- **Nhóm thực hiện:** Ngô Thị Thủy Vân & Ngô Quỳnh Trang (MSSV: 23K4300041 - Ví: 0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c, Cả hai đều là thành viên nhóm)
 
 ---
 

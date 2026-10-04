@@ -12,8 +12,8 @@
 
 | Họ và tên | Mã sinh viên | Địa chỉ ví Sepolia | Vai trò chính Tuần 1 (Lab 8–11) | Vai trò chính Tuần 2 & 3 (Lab 12–15) |
 |---|---|---|---|---|
-| **Ngô Thị Thủy Vân** | `23K4300068` | `0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c` | **Quản trị Sản phẩm & Đặc tả nghiệp vụ**<br>• Lập `REGISTRATION.md`, `lab08.md`<br>• Viết đặc tả `SPEC.md`, quy tắc `ECONOMIC_RULES.md`<br>• Khảo sát mô hình OCOP Huế | **Frontend Web3 DApp & Thuyết trình**<br>• Phát triển giao diện `web/index.html`<br>• Tích hợp sinh mã QR Code động cho lô hàng<br>• Thiết kế Slide 5 trang và kịch bản Demo Live |
-| **Thành viên 2 (Kỹ thuật)** | `23K4300089` | `0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f` | **Kỹ sư Hợp đồng thông minh**<br>• Lập trình `HueLegend.sol` (Solidity ^0.8.20)<br>• Cài đặt OpenZeppelin `AccessControl`<br>• Tối ưu cấu trúc dữ liệu và tiết kiệm Gas | **Kiểm thử Bảo mật & Audit chéo**<br>• Viết bộ kiểm thử Unit Test 8 kịch bản<br>• Kiểm thử lỗ hổng phân quyền, nhảy chặng<br>• Thực hiện Audit chéo và lập `AUDIT_REPORT.md` |
+| **Ngô Thị Thủy Vân** | `23K4300068` | `0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f` | **Thành viên — Quản trị Sản phẩm & Đặc tả nghiệp vụ**<br>• Lập `REGISTRATION.md`, `lab08.md`<br>• Viết đặc tả `SPEC.md`, quy tắc `ECONOMIC_RULES.md`<br>• Khảo sát mô hình OCOP Huế | **Frontend Web3 DApp & Thuyết trình**<br>• Phát triển giao diện `web/index.html`<br>• Tích hợp sinh mã QR Code động cho lô hàng<br>• Thiết kế Slide 5 trang và kịch bản Demo Live |
+| **Ngô Quỳnh Trang** | `23K4300041` | `0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c` | **Thành viên — Kỹ sư Hợp đồng thông minh** (Ví: 0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c)<br>• Lập trình `HueLegend.sol` (Solidity ^0.8.20)<br>• Cài đặt OpenZeppelin `AccessControl`<br>• Tối ưu cấu trúc dữ liệu và tiết kiệm Gas | **Kiểm thử Bảo mật & Audit chéo**<br>• Viết bộ kiểm thử Unit Test 8 kịch bản<br>• Kiểm thử lỗ hổng phân quyền, nhảy chặng<br>• Thực hiện Audit chéo và lập `AUDIT_REPORT.md` |
 
 ---
 

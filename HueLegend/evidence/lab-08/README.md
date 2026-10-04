@@ -2,7 +2,7 @@
 
 - **Học phần:** Tiền điện tử & Hợp đồng thông minh (ECO2432)
 - **Tên dự án:** HueLegend (Đề tài 10 — Truy xuất nguồn gốc đặc sản Cố đô Huế)
-- **Nhóm thực hiện:** Ngô Thị Thủy Vân & Thành viên 2 (Kỹ thuật)
+- **Nhóm thực hiện:** Ngô Thị Thủy Vân & Ngô Quỳnh Trang (Cả hai đều là thành viên nhóm)
 
 ---
 

@@ -99,7 +99,7 @@ abstract contract AccessControl is Context, IAccessControl {
 }
 
 /// @title HueLegend - He thong truy xuat nguon goc dac san Co do Hue tren Blockchain
-/// @author Ngo Thi Thuy Van & Nhóm sinh viên K57 Kinh tế Số
+/// @author Ngo Thi Thuy Van & Ngo Quynh Trang (MSSV: 23K4300041)
 /// @notice Quan ly vong doi lo hang dac san tu nha san xuat, van chuyen den dai ly va nguoi tieu dung
 contract HueLegend is AccessControl {
 
