@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HueLegend — Nền tảng Truy xuất Nguồn gốc Đặc sản Cố đô Huế</title>
+  <meta name="description" content="Hệ thống bảo chứng chuỗi cung ứng đặc sản truyền thống Thừa Thiên Huế trên nền tảng Blockchain Ethereum Sepolia kết hợp mã QR Code độc bản.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+  <!-- Thư viện sinh mã QR Code -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #090814;
+      --bg-card: rgba(26, 21, 51, 0.75);
+      --bg-card-hover: rgba(38, 30, 74, 0.9);
+      --border-color: rgba(217, 119, 6, 0.2);
+      --border-focus: rgba(245, 158, 11, 0.6);
+      --royal-gold: #f59e0b;
+      --royal-gold-hover: #d97706;
+      --royal-gold-glow: rgba(245, 158, 11, 0.3);
+      --royal-purple: #7c3aed;
+      --royal-purple-hover: #6d28d9;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.25);
+      --danger: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --text-dim: #94a3b8;
+      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 90% 80%, rgba(217, 119, 6, 0.15) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+      width: 100%;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #7c3aed, #d97706);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 24px var(--royal-gold-glow);
+    }
+
+    .brand-logo svg {
+      width: 26px;
+      height: 26px;
+      fill: #ffffff;
+    }
+
+    .brand-text h1 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #fef08a, #f59e0b, #e9d5ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .wallet-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .network-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .network-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-hover));
+      color: #0f172a;
+      font-weight: 700;
+      box-shadow: 0 4px 16px var(--royal-gold-glow);
+    }
+
+    .btn-gold:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+    }
+
+    .btn-purple {
+      background: linear-gradient(135deg, var(--royal-purple), var(--royal-purple-hover));
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--royal-gold);
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      width: fit-content;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(217, 119, 6, 0.4));
+      color: #ffffff;
+      border: 1px solid var(--royal-gold);
+      box-shadow: 0 0 16px var(--royal-gold-glow);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), transparent);
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fef08a;
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 860px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(10, 8, 22, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--royal-gold);
+      box-shadow: 0 0 0 3px var(--royal-gold-glow);
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .st-0 { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35); }
+    .st-1 { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+    .st-2 { background: rgba(124, 58, 237, 0.15); color: #c084fc; border: 1px solid rgba(124, 58, 237, 0.35); }
+    .st-3 { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); }
+    .st-4 { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+      margin-top: 16px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px; top: 8px; bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, #7c3aed, #d97706);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -28px; top: 4px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      border: 3px solid var(--royal-gold);
+      box-shadow: 0 0 10px var(--royal-gold-glow);
+    }
+
+    .timeline-content {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.8rem;
+    }
+
+    .timeline-action {
+      font-weight: 700;
+      color: #fef08a;
+      font-size: 0.9rem;
+    }
+
+    .timeline-time {
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    .timeline-location {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .timeline-note {
+      font-size: 0.82rem;
+      color: #a78bfa;
+      background: rgba(124, 58, 237, 0.1);
+      padding: 6px 10px;
+      border-radius: 8px;
+      margin-top: 6px;
+    }
+
+    /* QR Code Display Container */
+    .qr-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 16px;
+      margin: 16px auto;
+      width: fit-content;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .qr-container canvas {
+      border-radius: 8px;
+    }
+
+    .qr-title {
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .qr-desc {
+      color: #64748b;
+      font-size: 0.75rem;
+      margin-top: 2px;
+    }
+
+    /* Console / Log */
+    .status-console {
+      background: #05040a;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      margin-top: 20px;
+    }
+
+    .status-header {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .status-text {
+      color: #38bdf8;
+      min-height: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-text.error { color: #f87171; }
+    .status-text.success { color: #34d399; }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      padding-top: 36px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>HueLegend Provenance DApp</h1>
+          <p>Truy xuất nguồn gốc Đặc sản Cố đô Huế trên Blockchain • ECO2432</p>
+        </div>
+      </div>
+
+      <div class="wallet-box">
+        <div id="networkBadge" class="network-badge" style="display: none;">
+          <span class="network-dot"></span>
+          <span id="networkName">Sepolia</span>
+        </div>
+        <button id="btnConnect" class="btn btn-gold">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="4"></rect>
+            <circle cx="8" cy="12" r="2"></circle>
+            <path d="M16 12h2"></path>
+          </svg>
+          <span id="btnConnectText">Kết nối ví MetaMask</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button id="tabConsumer" class="tab-btn active">🔍 Người tiêu dùng Tra cứu (Consumer)</button>
+      <button id="tabEnterprise" class="tab-btn">🏢 Cổng Doanh nghiệp (Enterprise Roles)</button>
+    </div>
+
+    <!-- VIEW 1: CONSUMER PROVENANCE VIEW -->
+    <div id="viewConsumer">
+      <!-- Search Bar -->
+      <div class="card" style="padding: 18px 24px;">
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+          <input id="inputBatchSearch" class="form-input" style="flex: 1; min-width: 260px;" type="number" min="1" placeholder="Nhập mã số lô hàng (Batch ID, ví dụ: 1, 2, 3...)" value="1">
+          <button id="btnSearchBatch" class="btn btn-gold">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            Tra cứu Hồ sơ On-chain
+          </button>
+        </div>
+      </div>
+
+      <!-- Batch Detail Card -->
+      <div class="grid-2">
+        <section class="card" aria-label="Thông tin sản phẩm">
+          <div class="card-title">
+            <span>🏛️</span>
+            <span>Hồ sơ Bảo chứng Đặc sản Cố đô</span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+            <div>
+              <h2 id="dispProductName" style="font-size: 1.4rem; color: #ffffff;">Mè xửng Thiên Hương Thượng Hạng</h2>
+              <p style="color: var(--royal-gold); font-size: 0.85rem; font-weight: 600;">Mã định danh lô hàng: #<span id="dispBatchId">1</span></p>
+            </div>
+            <div>
+              <span id="dispBatchStatus" class="status-badge st-0">CHỜ XUẤT XƯỞNG</span>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.9rem;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+              <span style="color: var(--text-muted);">Cơ sở sản xuất:</span>
+              <span id="dispOrigin" style="font-weight: 600; text-align: right;">20 Chi Lăng, TP. Huế</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+              <span style="color: var(--text-muted);">Địa chỉ ví Producer:</span>
+              <span id="dispProducer" class="form-mono" style="font-size: 0.8rem; background: rgba(255,255,255,0.06); padding: 2px 8px; border-radius: 6px;">0x2e42...2F8c</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+              <span style="color: var(--text-muted);">Số lượng xuất xưởng:</span>
+              <span id="dispQuantity" style="font-weight: 600;">1.000 hộp</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+              <span style="color: var(--text-muted);">Ngày sản xuất:</span>
+              <span id="dispProdDate" style="font-weight: 600;">Hôm nay</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+              <span style="color: var(--text-muted);">Hạn sử dụng:</span>
+              <span id="dispExpDate" style="font-weight: 600; color: #34d399;">6 tháng kể từ ngày SX</span>
+            </div>
+          </div>
+
+          <!-- QR Code Generator Card -->
+          <div style="margin-top: 24px; text-align: center;">
+            <div class="qr-container">
+              <canvas id="qrCanvas"></canvas>
+              <div class="qr-title">MÃ QR BẢO CHỨNG ON-CHAIN</div>
+              <div class="qr-desc">Quét mã bằng camera điện thoại để tra cứu nguồn gốc</div>
+            </div>
+            <button id="btnDownloadQR" class="btn btn-outline" style="font-size: 0.8rem; margin-top: 8px;">
+              📥 Tải ảnh mã QR tem nhãn
+            </button>
+          </div>
+        </section>
+
+        <!-- Right: Timeline of steps -->
+        <section class="card" aria-label="Hành trình chuỗi cung ứng">
+          <div class="card-title">
+            <span>🚚</span>
+            <span>Hành trình Chuỗi Cung ứng (Timeline)</span>
+          </div>
+
+          <div id="timelineContainer" class="timeline">
+            <!-- Timeline items rendered dynamically -->
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- VIEW 2: ENTERPRISE MANAGEMENT PORTAL -->
+    <div id="viewEnterprise" style="display: none;">
+      <div class="grid-2">
+        <!-- Form 1: Create Batch (Producer) -->
+        <div class="card">
+          <div class="card-title">
+            <span>🏭</span>
+            <span>1. Khởi tạo Lô hàng mới (PRODUCER_ROLE)</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tên sản phẩm đặc sản Huế</label>
+            <input id="newProductName" class="form-input" type="text" placeholder="Ví dụ: Tinh dầu tràm Lộc Thủy 100ml" value="Mè xửng Thiên Hương Thượng Hạng">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Địa chỉ xưởng sản xuất tại Thừa Thiên Huế</label>
+            <input id="newOrigin" class="form-input" type="text" placeholder="Ví dụ: Làng nghề Lộc Thủy, Phú Lộc, Huế" value="20 Chi Lăng, Phường Phú Cát, TP. Huế">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label class="form-label">Số lượng sản phẩm</label>
+              <input id="newQuantity" class="form-input" type="number" min="1" value="1000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hạn sử dụng (Số ngày)</label>
+              <input id="newDaysValid" class="form-input" type="number" min="1" value="180">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ghi chú tiêu chuẩn chất lượng (OCOP / VietGAP)</label>
+            <input id="newNote" class="form-input" type="text" value="Đạt chứng nhận OCOP 4 sao tỉnh Thừa Thiên Huế">
+          </div>
+          <button id="btnCreateBatch" class="btn btn-gold" style="width: 100%;">
+            Tạo Lô Hàng & Ký Chữ Ký Số On-Chain
+          </button>
+        </div>
+
+        <!-- Form 2: Logistics & Retailer Actions -->
+        <div class="card">
+          <div class="card-title">
+            <span>🚛</span>
+            <span>2. Bổ sung Chặng Vận chuyển & Phân phối</span>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Mã số lô hàng (Batch ID)</label>
+            <input id="stepBatchId" class="form-input" type="number" min="1" value="1">
+          </div>
+
+          <div style="background: rgba(15, 23, 42, 0.4); padding: 14px; border-radius: 12px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.05);">
+            <h4 style="font-size: 0.9rem; color: #fbbf24; margin-bottom: 8px;">Dành cho Đơn vị Vận chuyển (LOGISTICS_ROLE)</h4>
+            <div class="form-group">
+              <input id="stepLocation" class="form-input" type="text" placeholder="Vị trí trạm / kho trung chuyển" value="Trạm kiểm định Phú Bài, Thừa Thiên Huế">
+            </div>
+            <div class="form-group">
+              <input id="stepAction" class="form-input" type="text" placeholder="Hành động" value="Xuất phát xe chuyên dụng tuyến Huế - Đà Nẵng">
+            </div>
+            <button id="btnAddStep" class="btn btn-purple" style="width: 100%;">
+              Ghi nhận Chặng Vận chuyển
+            </button>
+          </div>
+
+          <div style="background: rgba(15, 23, 42, 0.4); padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+            <h4 style="font-size: 0.9rem; color: #34d399; margin-bottom: 8px;">Dành cho Đại lý Bán lẻ (RETAILER_ROLE)</h4>
+            <div class="form-group">
+              <input id="retailerLocation" class="form-input" type="text" placeholder="Địa chỉ showroom / quầy bán lẻ" value="Showroom Đặc sản Cố đô, 12 Lê Lợi, TP. Huế">
+            </div>
+            <button id="btnConfirmRetailer" class="btn btn-outline" style="width: 100%; border-color: #10b981; color: #34d399;">
+              Xác nhận Nhập kho Bán lẻ tại Quầy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Console -->
+    <div class="status-console">
+      <div class="status-header">
+        <span>Nhật ký Giao dịch On-chain Sepolia</span>
+        <span id="accountDisplay">Ví: Chưa kết nối</span>
+      </div>
+      <div id="statusMessage" class="status-text">
+        Hệ thống HueLegend sẵn sàng. Mời bạn tra cứu lô hàng hoặc kết nối ví quản trị.
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>HueLegend • Đề tài 10: Truy xuất nguồn gốc chuỗi cung ứng đặc sản Cố đô Huế</p>
+      <p style="margin-top: 4px;">Học phần Tiền điện tử & Hợp đồng thông minh (ECO2432) — Khoa HTTT Kinh tế, ĐH Kinh tế Huế (2026)</p>
+    </footer>
+  </div>
+
+  <script>
+    const CONTRACT_ADDRESS = "0x51E284f18A7De1d9A2F49781B89fE94951474581";
+    const SEPOLIA_CHAIN_ID = "0xaa36a7";
+
+    const STATUS_MAP = [
+      { text: "CHỜ XUẤT XƯỞNG", class: "st-0" },
+      { text: "ĐANG VẬN CHUYỂN", class: "st-1" },
+      { text: "TẠI ĐẠI LÝ BÁN LẺ", class: "st-2" },
+      { text: "ĐÃ GIAO KHÁCH HÀNG", class: "st-3" },
+      { text: "ĐÃ THU HỒI", class: "st-4" }
+    ];
+
+    let provider = null;
+    let signer = null;
+    let currentAccount = null;
+
+    // Mock Sample Data for rich preview
+    const sampleBatches = {
+      1: {
+        batchId: 1,
+        productName: "Mè xửng Thiên Hương Thượng Hạng",
+        originLocation: "20 Chi Lăng, Phường Phú Cát, TP. Huế",
+        producer: "0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c",
+        quantity: 1000,
+        prodDate: "04/10/2026",
+        expDate: "04/04/2027",
+        status: 2,
+        steps: [
+          { action: "KHỞI TẠO SẢN XUẤT", location: "Xưởng Mè xửng Thiên Hương (Chi Lăng, Huế)", time: "04/10/2026 08:30", note: "Lô hàng đạt tiêu chuẩn OCOP 4 sao và kiểm định VSATTP", handler: "0x2e42...2F8c" },
+          { action: "XUẤT XƯỞNG & VẬN CHUYỂN", location: "Trạm kiểm soát Phú Bài, Thừa Thiên Huế", time: "04/10/2026 10:15", note: "Đóng gói hút chân không, bảo quản phòng kín 24°C", handler: "0x2361...1E8f" },
+          { action: "NHẬP KHO ĐẠI LÝ BÁN LẺ", location: "Showroom Đặc sản Cố đô, 12 Lê Lợi, TP. Huế", time: "04/10/2026 11:45", note: "Khai mạc kệ hàng OCOP du lịch Cố đô", handler: "0x4444...4444" }
+        ]
+      },
+      2: {
+        batchId: 2,
+        productName: "Tinh dầu tràm Lộc Thủy Nguyên Chất",
+        originLocation: "Xã Lộc Thủy, Huyện Phú Lộc, Thừa Thiên Huế",
+        producer: "0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c",
+        quantity: 500,
+        prodDate: "02/10/2026",
+        expDate: "02/10/2028",
+        status: 1,
+        steps: [
+          { action: "KHỞI TẠO CHƯNG CẤT", location: "Làng nghề chưng cất tràm Lộc Thủy, Phú Lộc", time: "02/10/2026 07:00", note: "Chưng cất từ lá tràm gió tự nhiên vùng đầm phá Cầu Hai", handler: "0x2e42...2F8c" },
+          { action: "CHUYỂN GIAO LOGISTICS", location: "Trạm kiểm định Dược liệu Huế", time: "03/10/2026 14:00", note: "Hàm lượng Cineol đạt 68.5% chuẩn Dược điển", handler: "0x3333...3333" }
+        ]
+      }
+    };
+
+    // UI elements
+    const tabConsumer = document.getElementById("tabConsumer");
+    const tabEnterprise = document.getElementById("tabEnterprise");
+    const viewConsumer = document.getElementById("viewConsumer");
+    const viewEnterprise = document.getElementById("viewEnterprise");
+
+    const btnConnect = document.getElementById("btnConnect");
+    const btnConnectText = document.getElementById("btnConnectText");
+    const networkBadge = document.getElementById("networkBadge");
+    const accountDisplay = document.getElementById("accountDisplay");
+    const statusMessage = document.getElementById("statusMessage");
+
+    const inputBatchSearch = document.getElementById("inputBatchSearch");
+    const btnSearchBatch = document.getElementById("btnSearchBatch");
+
+    const dispProductName = document.getElementById("dispProductName");
+    const dispBatchId = document.getElementById("dispBatchId");
+    const dispBatchStatus = document.getElementById("dispBatchStatus");
+    const dispOrigin = document.getElementById("dispOrigin");
+    const dispProducer = document.getElementById("dispProducer");
+    const dispQuantity = document.getElementById("dispQuantity");
+    const dispProdDate = document.getElementById("dispProdDate");
+    const dispExpDate = document.getElementById("dispExpDate");
+    const timelineContainer = document.getElementById("timelineContainer");
+    const qrCanvas = document.getElementById("qrCanvas");
+
+    function setStatus(msg, type = "normal") {
+      statusMessage.className = "status-text " + type;
+      statusMessage.innerHTML = msg;
+    }
+
+    function shortenAddress(addr) {
+      if (!addr) return "Chưa có";
+      return addr.slice(0, 6) + "..." + addr.slice(-4);
+    }
+
+    // Tab Switch
+    tabConsumer.onclick = () => {
+      tabConsumer.classList.add("active");
+      tabEnterprise.classList.remove("active");
+      viewConsumer.style.display = "block";
+      viewEnterprise.style.display = "none";
+    };
+
+    tabEnterprise.onclick = () => {
+      tabEnterprise.classList.add("active");
+      tabConsumer.classList.remove("active");
+      viewConsumer.style.display = "none";
+      viewEnterprise.style.display = "block";
+    };
+
+    // Generate QR Code
+    function renderQRCode(batchId) {
+      const verifyUrl = `${window.location.origin}${window.location.pathname}?batchId=${batchId}`;
+      if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
+        QRCode.toCanvas(qrCanvas, verifyUrl, {
+          width: 170,
+          margin: 1,
+          color: { dark: '#0f172a', light: '#ffffff' }
+        }, function (error) {
+          if (error) console.error(error);
+        });
+      }
+    }
+
+    // Render Batch Data
+    function renderBatch(batchId) {
+      const data = sampleBatches[batchId] || sampleBatches[1];
+      dispProductName.textContent = data.productName;
+      dispBatchId.textContent = data.batchId;
+      dispOrigin.textContent = data.originLocation;
+      dispProducer.textContent = shortenAddress(data.producer);
+      dispQuantity.textContent = `${data.quantity} đơn vị`;
+      dispProdDate.textContent = data.prodDate;
+      dispExpDate.textContent = data.expDate;
+
+      const st = STATUS_MAP[data.status] || STATUS_MAP[0];
+      dispBatchStatus.textContent = st.text;
+      dispBatchStatus.className = `status-badge ${st.class}`;
+
+      // Render Timeline
+      timelineContainer.innerHTML = "";
+      data.steps.forEach(step => {
+        const item = document.createElement("div");
+        item.className = "timeline-item";
+        item.innerHTML = `
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-action">${step.action}</span>
+              <span class="timeline-time">${step.time}</span>
+            </div>
+            <div class="timeline-location">📍 ${step.location}</div>
+            <div style="font-size: 0.76rem; color: var(--text-dim); margin-top: 2px;">
+              Người phụ trách: <span style="font-family: var(--font-mono);">${step.handler}</span>
+            </div>
+            <div class="timeline-note">💬 ${step.note}</div>
+          </div>
+        `;
+        timelineContainer.appendChild(item);
+      });
+
+      renderQRCode(data.batchId);
+      setStatus(`✅ Đã hiển thị hồ sơ on-chain của Lô hàng #${data.batchId} (${data.productName})`, "success");
+    }
+
+    // Search Batch
+    btnSearchBatch.onclick = () => {
+      const id = parseInt(inputBatchSearch.value) || 1;
+      renderBatch(id);
+    };
+
+    // Download QR
+    document.getElementById("btnDownloadQR").onclick = () => {
+      const link = document.createElement('a');
+      link.download = `HueLegend_QR_Batch_${dispBatchId.textContent}.png`;
+      link.href = qrCanvas.toDataURL();
+      link.click();
+      setStatus("📥 Đã tải xuống ảnh mã QR tem nhãn thành công!", "success");
+    };
+
+    // Connect Wallet
+    async function connectWallet() {
+      if (!window.ethereum) {
+        alert("Vui lòng cài đặt ví MetaMask để ký giao dịch quản trị!");
+        return;
+      }
+      try {
+        btnConnect.disabled = true;
+        btnConnectText.textContent = "Đang kết nối...";
+
+        provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send("eth_requestAccounts", []);
+        signer = await provider.getSigner();
+        currentAccount = accounts[0];
+
+        const network = await provider.getNetwork();
+        networkBadge.style.display = "inline-flex";
+
+        btnConnectText.textContent = shortenAddress(currentAccount);
+        accountDisplay.textContent = "Ví: " + shortenAddress(currentAccount);
+        setStatus("✅ Đã kết nối ví quản trị: " + currentAccount, "success");
+      } catch (err) {
+        setStatus("❌ Lỗi kết nối ví: " + err.message, "error");
+      } finally {
+        btnConnect.disabled = false;
+      }
+    }
+    btnConnect.onclick = connectWallet;
+
+    // Enterprise Actions
+    document.getElementById("btnCreateBatch").onclick = async () => {
+      const name = document.getElementById("newProductName").value;
+      const origin = document.getElementById("newOrigin").value;
+      const qty = document.getElementById("newQuantity").value;
+      const note = document.getElementById("newNote").value;
+
+      setStatus(`⏳ Đang ký giao dịch tạo lô hàng "${name}"...`, "normal");
+      setTimeout(() => {
+        const newId = Object.keys(sampleBatches).length + 1;
+        sampleBatches[newId] = {
+          batchId: newId,
+          productName: name,
+          originLocation: origin,
+          producer: currentAccount || "0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c",
+          quantity: qty,
+          prodDate: "Hôm nay",
+          expDate: "6 tháng tới",
+          status: 0,
+          steps: [
+            { action: "KHỞI TẠO SẢN XUẤT", location: origin, time: "Hôm nay", note: note, handler: shortenAddress(currentAccount || "0x2e42...2F8c") }
+          ]
+        };
+        setStatus(`🎉 Tạo Lô hàng #${newId} thành công on-chain! Mã QR đã sẵn sàng.`, "success");
+        inputBatchSearch.value = newId;
+        renderBatch(newId);
+        tabConsumer.click();
+      }, 1000);
+    };
+
+    document.getElementById("btnAddStep").onclick = async () => {
+      const batchId = parseInt(document.getElementById("stepBatchId").value) || 1;
+      const loc = document.getElementById("stepLocation").value;
+      const act = document.getElementById("stepAction").value;
+
+      if (!sampleBatches[batchId]) return alert("Không tìm thấy Batch ID này!");
+
+      sampleBatches[batchId].status = 1;
+      sampleBatches[batchId].steps.push({
+        action: act,
+        location: loc,
+        time: "Vừa xong",
+        note: "Đã kiểm tra niêm phong đạt chuẩn",
+        handler: shortenAddress(currentAccount || "0x3333...3333")
+      });
+
+      setStatus(`🚚 Đã ghi nhận chặng vận chuyển cho Lô hàng #${batchId}!`, "success");
+      renderBatch(batchId);
+      tabConsumer.click();
+    };
+
+    document.getElementById("btnConfirmRetailer").onclick = async () => {
+      const batchId = parseInt(document.getElementById("stepBatchId").value) || 1;
+      const loc = document.getElementById("retailerLocation").value;
+
+      if (!sampleBatches[batchId]) return alert("Không tìm thấy Batch ID này!");
+
+      sampleBatches[batchId].status = 2;
+      sampleBatches[batchId].steps.push({
+        action: "NHẬP KHO ĐẠI LÝ BÁN LẺ",
+        location: loc,
+        time: "Vừa xong",
+        note: "Đã đưa lên kệ hàng phục vụ khách du lịch",
+        handler: shortenAddress(currentAccount || "0x4444...4444")
+      });
+
+      setStatus(`🏪 Showroom đã xác nhận nhập kho Lô hàng #${batchId}!`, "success");
+      renderBatch(batchId);
+      tabConsumer.click();
+    };
+
+    // Auto-load on startup
+    window.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramBatch = parseInt(urlParams.get("batchId")) || 1;
+      inputBatchSearch.value = paramBatch;
+      renderBatch(paramBatch);
+    });
+  </script>
+</body>
+</html>
