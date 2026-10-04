@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 /// @title CampusEscrow - Hop dong ky quy mua ban do cu KTX sinh vien (Co thu phi quy KTX)
-/// @notice Core Escrow contract for dormitory secondhand item trading with 1% KTX fee
+/// @notice Core Escrow contract for dormitory secondhand item trading with 1% KTX fee & DoS resilience
 contract CampusEscrow {
     enum State {
         Created,
@@ -15,6 +15,7 @@ contract CampusEscrow {
     address public immutable seller;
     address public immutable feeRecipient; // Vi quy KTX nhan phi duy tri
     uint256 public constant feeBps = 100;   // 100 diem co ban = 1.00%
+    string public itemDescription;         // Mo ta mon do cu (Quat dien, Tu lanh mini,...)
     address public buyer;
     uint256 public immutable price;
     uint256 public immutable daysToConfirm;
@@ -22,9 +23,10 @@ contract CampusEscrow {
     State public state;
 
     // Su kien on-chain
-    event Created(address indexed seller, uint256 price, uint256 daysToConfirm, address indexed feeRecipient);
+    event Created(address indexed seller, string itemDescription, uint256 price, uint256 daysToConfirm, address indexed feeRecipient);
     event Funded(address indexed buyer, uint256 amount, uint256 deadline);
     event FeeCollected(address indexed recipient, uint256 feeAmount);
+    event FeeTransferFailed(address indexed recipient, uint256 feeAmount);
     event Completed(address indexed seller, uint256 sellerAmount);
     event Refunded(address indexed buyer, uint256 refundAmount);
 
@@ -44,11 +46,13 @@ contract CampusEscrow {
 
     /// @notice Khoi tao don hang ky quy mua ban do cu KTX
     /// @param _seller Dia chi vi nguoi ban
+    /// @param _itemDescription Mo ta ngan gon mon do duoc rao ban
     /// @param _price Gia niem yet cua san pham (wei, toi thieu 10,000 wei de tinh phi)
     /// @param _daysToConfirm So ngay nguoi mua co de kiem tra hang (1 den 14 ngay)
     /// @param _feeRecipient Dia chi vi quy tu quan KTX
     constructor(
         address _seller,
+        string memory _itemDescription,
         uint256 _price,
         uint256 _daysToConfirm,
         address _feeRecipient
@@ -59,12 +63,13 @@ contract CampusEscrow {
         if (_daysToConfirm < 1 || _daysToConfirm > 14) revert InvalidDuration(1, 14);
 
         seller = _seller;
+        itemDescription = _itemDescription;
         price = _price;
         daysToConfirm = _daysToConfirm;
         feeRecipient = _feeRecipient;
         state = State.Created;
 
-        emit Created(_seller, _price, _daysToConfirm, _feeRecipient);
+        emit Created(_seller, _itemDescription, _price, _daysToConfirm, _feeRecipient);
     }
 
     /// @notice Nguoi mua khoa tien coc vao hop dong
@@ -94,14 +99,19 @@ contract CampusEscrow {
         uint256 fee = (price * feeBps) / 10_000;
         uint256 sellerAmount = price - fee;
 
-        emit FeeCollected(feeRecipient, fee);
-        emit Completed(seller, sellerAmount);
-
         // 3. Interactions (Chuyen tien ra ngoai sau cung)
         if (fee > 0) {
             (bool feeOk, ) = payable(feeRecipient).call{value: fee}("");
-            if (!feeOk) revert TransferFailed();
+            if (feeOk) {
+                emit FeeCollected(feeRecipient, fee);
+            } else {
+                // Phong thu DoS: Neu vi quy KTX tu choi nhan tien, gop phi tra lai cho seller
+                sellerAmount += fee;
+                emit FeeTransferFailed(feeRecipient, fee);
+            }
         }
+
+        emit Completed(seller, sellerAmount);
 
         (bool sellerOk, ) = payable(seller).call{value: sellerAmount}("");
         if (!sellerOk) revert TransferFailed();
