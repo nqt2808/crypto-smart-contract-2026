@@ -1,56 +1,1050 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Ứng dụng ECO2432</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusEscrow — Ký quỹ mua bán đồ cũ KTX Đại học</title>
+  <meta name="description" content="DApp ký quỹ mua bán đồ dùng cũ nội bộ Ký túc xá an toàn, minh bạch trên Ethereum Sepolia với cơ chế chống bùng cọc và trích 1% phí phúc lợi KTX.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
   <style>
-    body{font-family:system-ui,sans-serif;max-width:680px;margin:40px auto;padding:0 18px;color:#172033}
-    button,input{font:inherit;padding:10px 12px;margin:5px 3px 5px 0} #status{min-height:1.5em;color:#1d4ed8}
+    :root {
+      --bg-dark: #0b0f19;
+      --bg-card: rgba(22, 31, 50, 0.75);
+      --bg-card-hover: rgba(27, 38, 62, 0.9);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.5);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.25);
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.2);
+      --warning: #f59e0b;
+      --warning-glow: rgba(245, 158, 11, 0.2);
+      --danger: #ef4444;
+      --danger-glow: rgba(239, 68, 68, 0.2);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 40%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+      width: 100%;
+    }
+
+    /* Header & Navigation */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #6366f1, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .brand-logo svg {
+      width: 24px;
+      height: 24px;
+      fill: #ffffff;
+    }
+
+    .brand-text h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .wallet-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .network-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.1);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .network-badge.wrong-network {
+      background: rgba(239, 68, 68, 0.1);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .network-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #ffffff;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 4px 14px var(--success-glow);
+    }
+
+    .btn-success:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #ffffff;
+      box-shadow: 0 4px 14px var(--warning-glow);
+    }
+
+    .btn-warning:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Grid Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 860px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Glass Cards */
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Contract Selector Bar */
+    .contract-bar {
+      margin-bottom: 24px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .input-field {
+      flex: 1;
+      min-width: 260px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    /* State Hero */
+    .state-banner {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .state-info h3 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .state-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-created {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+    }
+
+    .badge-funded {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .badge-completed {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .badge-refunded {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    /* Property Rows */
+    .prop-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .prop-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.9rem;
+    }
+
+    .prop-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .prop-label {
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prop-val {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-main);
+      text-align: right;
+    }
+
+    .prop-val.price {
+      font-size: 1.2rem;
+      color: #38bdf8;
+    }
+
+    .address-tag {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+
+    /* Actions Panel */
+    .actions-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .action-card {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .action-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .action-card h4 {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .action-card p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    /* Status Console */
+    .status-console {
+      margin-top: 24px;
+      background: #060911;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+    }
+
+    .status-header {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-text {
+      color: #38bdf8;
+      word-break: break-all;
+      min-height: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-text.error {
+      color: #f87171;
+    }
+
+    .status-text.success {
+      color: #34d399;
+    }
+
+    .tx-hash-link {
+      color: #818cf8;
+      text-decoration: underline;
+      margin-top: 6px;
+      display: block;
+      font-size: 0.78rem;
+    }
+
+    /* Economic Flow Pill */
+    .economic-flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .flow-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .flow-box .title {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .flow-box .value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      padding-top: 40px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: var(--text-main);
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
-  <h1>Két tiết kiệm của nhóm</h1>
-  <button id="btnConnect">Kết nối ví</button>
-  <p>Ví: <span id="account">chưa kết nối</span></p>
-  <p>Số dư trong két: <span id="vaultBalance">-</span> ETH</p>
-  <input id="amount" type="number" step="0.001" placeholder="Số ETH muốn nạp">
-  <button id="btnDeposit">Nạp tiền</button>
-  <button id="btnWithdraw">Rút tiền</button>
-  <p id="status"></p>
-<script>
-const CONTRACT_ADDRESS = "0x................................";
-const CONTRACT_ABI = [];
-let provider, signer, contract;
-const statusNode = document.getElementById("status");
-const setStatus = (message) => { statusNode.textContent = message; };
-async function refresh() {
-  const balance = await provider.getBalance(CONTRACT_ADDRESS);
-  document.getElementById("vaultBalance").textContent = ethers.formatEther(balance);
-}
-document.getElementById("btnConnect").onclick = async () => {
-  if (!window.ethereum) return alert("Chưa cài MetaMask");
-  provider = new ethers.BrowserProvider(window.ethereum);
-  await provider.send("eth_requestAccounts", []);
-  signer = await provider.getSigner();
-  contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-  document.getElementById("account").textContent = await signer.getAddress();
-  await refresh();
-};
-document.getElementById("btnDeposit").onclick = async () => {
-  try {
-    const value = document.getElementById("amount").value;
-    const tx = await contract.deposit({value: ethers.parseEther(value)});
-    setStatus("Đang chờ xác nhận..."); await tx.wait(); setStatus("Đã nạp: " + tx.hash); await refresh();
-  } catch (error) { setStatus(error.shortMessage || error.message); }
-};
-document.getElementById("btnWithdraw").onclick = async () => {
-  try {
-    const tx = await contract.withdraw(); setStatus("Đang chờ xác nhận...");
-    await tx.wait(); setStatus("Đã rút: " + tx.hash); await refresh();
-  } catch (error) { setStatus(error.shortMessage || error.message); }
-};
-</script>
+
+  <div class="container">
+    <!-- Top Header -->
+    <header>
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>CampusEscrow DApp</h1>
+          <p>Ký quỹ mua bán đồ cũ Ký túc xá • Môn học ECO2432 (K57)</p>
+        </div>
+      </div>
+
+      <div class="wallet-section">
+        <div id="networkBadge" class="network-badge" style="display: none;">
+          <span class="network-dot"></span>
+          <span id="networkName">Sepolia</span>
+        </div>
+        <button id="btnConnect" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="4"></rect>
+            <circle cx="8" cy="12" r="2"></circle>
+            <path d="M16 12h2"></path>
+          </svg>
+          <span id="btnConnectText">Kết nối ví MetaMask</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Contract Selector -->
+    <div class="contract-bar">
+      <input id="contractAddress" class="input-field" type="text" placeholder="Địa chỉ hợp đồng CampusEscrow (0x...)" value="0x51E284f18A7De1d9A2F49781B89fE94951474581">
+      <button id="btnLoadContract" class="btn btn-outline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+        </svg>
+        Đọc hợp đồng
+      </button>
+    </div>
+
+    <!-- Main Workspace Grid -->
+    <div class="grid">
+      <!-- Left Column: Contract State & Info -->
+      <section class="card" aria-label="Thông tin đơn hàng">
+        <div class="card-title">
+          <span class="card-title-icon">📦</span>
+          <span>Chi tiết đơn hàng ký quỹ on-chain</span>
+        </div>
+
+        <div class="state-banner">
+          <div class="state-info">
+            <h3 id="displayItemName">Quạt điện Senko KTX B4</h3>
+            <p>Mã đơn hàng: <span id="displayContractShort" class="address-tag">0x51E2...4581</span></p>
+          </div>
+          <div>
+            <span id="badgeState" class="badge-status badge-created">ĐANG CHỜ CỌC</span>
+          </div>
+        </div>
+
+        <div class="prop-list">
+          <div class="prop-row">
+            <span class="prop-label">Giá niêm yết (ETH):</span>
+            <span id="valPrice" class="prop-val price">0.0500 ETH</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Người bán (Seller):</span>
+            <span id="valSeller" class="prop-val address-tag">0x2e42...2F8c</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Người mua (Buyer):</span>
+            <span id="valBuyer" class="prop-val address-tag">Chưa có người cọc</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Quỹ phúc lợi KTX (1% fee):</span>
+            <span id="valFeeFund" class="prop-val address-tag">0x9999...f08E</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Thời hạn xác nhận (Days):</span>
+            <span id="valDays" class="prop-val">3 ngày</span>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Thời gian còn lại (Time left):</span>
+            <span id="valTimeLeft" class="prop-val" style="color: #fbbf24;">Chưa kích hoạt</span>
+          </div>
+        </div>
+
+        <!-- Economic Breakdown -->
+        <div class="economic-flow">
+          <div class="flow-box">
+            <div class="title">TỔNG TIỀN CỌC</div>
+            <div id="flowTotal" class="value">0.05 ETH</div>
+          </div>
+          <div class="flow-box">
+            <div class="title">SELLER THỰC NHẬN (99%)</div>
+            <div id="flowSeller" class="value" style="color: #34d399;">0.0495 ETH</div>
+          </div>
+          <div class="flow-box">
+            <div class="title">QUỸ KTX (1%)</div>
+            <div id="flowFee" class="value" style="color: #60a5fa;">0.0005 ETH</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Interactive Actions -->
+      <section class="card" aria-label="Thao tác giao dịch">
+        <div class="card-title">
+          <span class="card-title-icon">⚡</span>
+          <span>Bảng điều khiển giao dịch</span>
+        </div>
+
+        <div class="actions-panel">
+          <!-- Action 1: Fund -->
+          <div class="action-card">
+            <h4><span style="color:#60a5fa;">1.</span> Đặt cọc & Khóa tiền</h4>
+            <p>Dành cho Người mua: chuyển chính xác số tiền niêm yết vào hợp đồng để giữ hàng.</p>
+            <button id="btnFund" class="btn btn-primary" style="width: 100%;">
+              Khóa tiền cọc (<span id="fundAmountBtn">0.05</span> ETH)
+            </button>
+          </div>
+
+          <!-- Action 2: Confirm Received -->
+          <div class="action-card">
+            <h4><span style="color:#34d399;">2.</span> Xác nhận đã nhận hàng</h4>
+            <p>Dành cho Người mua sau khi kiểm tra đồ: giải phóng 99% cho Seller và 1% vào Quỹ KTX.</p>
+            <button id="btnConfirm" class="btn btn-success" style="width: 100%;">
+              Xác nhận nhận đồ & Giải ngân
+            </button>
+          </div>
+
+          <!-- Action 3: Refund -->
+          <div class="action-card">
+            <h4><span style="color:#f87171;">3.</span> Yêu cầu hoàn tiền quá hạn</h4>
+            <p>Kích hoạt khi hết hạn chót (Deadline) mà người bán không giao hàng: hoàn 100% cho Buyer.</p>
+            <button id="btnRefund" class="btn btn-warning" style="width: 100%;">
+              Rút tiền hoàn trả 100%
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Live Status Console -->
+    <div class="status-console">
+      <div class="status-header">
+        <span>Nhật ký giao dịch on-chain & Phản hồi DApp</span>
+        <span id="activeAccountDisplay">Ví: Chưa kết nối</span>
+      </div>
+      <div id="statusMessage" class="status-text">
+        Hệ thống sẵn sàng. Vui lòng kết nối ví MetaMask trên mạng Sepolia để tương tác.
+      </div>
+      <a id="txHashLink" class="tx-hash-link" style="display: none;" target="_blank" rel="noreferrer">
+        Xem giao dịch trên Etherscan ↗
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>CampusEscrow • Đồ án nhóm Học phần Tiền điện tử & Hợp đồng thông minh (ECO2432)</p>
+      <p style="margin-top: 4px;">Khoa Hệ thống Thông tin Kinh tế — Trường Đại học Kinh tế, Đại học Huế (2026)</p>
+    </footer>
+  </div>
+
+  <script>
+    // --- ABI HỢP ĐỒNG CAMPUSESTROW (Solidity ^0.8.20) ---
+    const ESCROW_ABI = [
+      "function seller() view returns (address)",
+      "function feeRecipient() view returns (address)",
+      "function feeBps() view returns (uint256)",
+      "function itemDescription() view returns (string)",
+      "function buyer() view returns (address)",
+      "function price() view returns (uint256)",
+      "function daysToConfirm() view returns (uint256)",
+      "function deadline() view returns (uint256)",
+      "function state() view returns (uint8)",
+      "function timeLeft() view returns (uint256)",
+      "function fund() payable",
+      "function confirmReceived()",
+      "function refundAfterDeadline()",
+      "event Created(address indexed seller, string itemDescription, uint256 price, uint256 daysToConfirm, address indexed feeRecipient)",
+      "event Funded(address indexed buyer, uint256 amount, uint256 deadline)",
+      "event FeeCollected(address indexed recipient, uint256 feeAmount)",
+      "event FeeTransferFailed(address indexed recipient, uint256 feeAmount)",
+      "event Completed(address indexed seller, uint256 sellerAmount)",
+      "event Refunded(address indexed buyer, uint256 refundAmount)",
+      "error InvalidAddress()",
+      "error ZeroPrice()",
+      "error PriceTooLow(uint256 minPrice)",
+      "error InvalidDuration(uint256 min, uint256 max)",
+      "error WrongState(uint8 expected, uint8 current)",
+      "error WrongAmount(uint256 expected, uint256 sent)",
+      "error NotBuyer()",
+      "error NotSeller()",
+      "error NotAuthorized()",
+      "error BuyerCannotBeSeller()",
+      "error DeadlineNotReached(uint256 unlockTime, uint256 currentTime)",
+      "error TransferFailed()"
+    ];
+
+    const SEPOLIA_CHAIN_ID = "0xaa36a7"; // 11155111
+    const STATES = ["Created (Chờ cọc)", "Funded (Đã cọc tiền)", "Completed (Đã giao hàng)", "Refunded (Đã hoàn tiền)"];
+
+    let provider = null;
+    let signer = null;
+    let escrowContract = null;
+    let currentAccount = null;
+    let currentContractAddress = "0x51E284f18A7De1d9A2F49781B89fE94951474581";
+    let cachedPrice = ethers.parseEther("0.05");
+
+    // UI Nodes
+    const btnConnect = document.getElementById("btnConnect");
+    const btnConnectText = document.getElementById("btnConnectText");
+    const networkBadge = document.getElementById("networkBadge");
+    const networkName = document.getElementById("networkName");
+    const activeAccountDisplay = document.getElementById("activeAccountDisplay");
+    const statusMessage = document.getElementById("statusMessage");
+    const txHashLink = document.getElementById("txHashLink");
+
+    const btnLoadContract = document.getElementById("btnLoadContract");
+    const inputContract = document.getElementById("contractAddress");
+
+    const displayItemName = document.getElementById("displayItemName");
+    const displayContractShort = document.getElementById("displayContractShort");
+    const badgeState = document.getElementById("badgeState");
+
+    const valPrice = document.getElementById("valPrice");
+    const valSeller = document.getElementById("valSeller");
+    const valBuyer = document.getElementById("valBuyer");
+    const valFeeFund = document.getElementById("valFeeFund");
+    const valDays = document.getElementById("valDays");
+    const valTimeLeft = document.getElementById("valTimeLeft");
+
+    const flowTotal = document.getElementById("flowTotal");
+    const flowSeller = document.getElementById("flowSeller");
+    const flowFee = document.getElementById("flowFee");
+    const fundAmountBtn = document.getElementById("fundAmountBtn");
+
+    const btnFund = document.getElementById("btnFund");
+    const btnConfirm = document.getElementById("btnConfirm");
+    const btnRefund = document.getElementById("btnRefund");
+
+    function setStatus(text, type = "normal", txHash = null) {
+      statusMessage.className = "status-text " + type;
+      statusMessage.innerHTML = text;
+
+      if (txHash) {
+        txHashLink.style.display = "block";
+        txHashLink.href = `https://sepolia.etherscan.io/tx/${txHash}`;
+        txHashLink.textContent = `Xem giao dịch on-chain: ${txHash.slice(0, 16)}... ↗`;
+      } else {
+        txHashLink.style.display = "none";
+      }
+    }
+
+    function shortenAddress(addr) {
+      if (!addr || addr === ethers.ZeroAddress) return "Chưa có";
+      return addr.slice(0, 6) + "..." + addr.slice(-4);
+    }
+
+    // Connect Wallet
+    async function connectWallet() {
+      if (!window.ethereum) {
+        setStatus("⚠️ Trình duyệt chưa cài đặt tiện ích MetaMask. Vui lòng cài đặt để tiếp tục!", "error");
+        return;
+      }
+
+      try {
+        btnConnect.disabled = true;
+        btnConnectText.innerHTML = '<span class="spinner"></span> Đang kết nối...';
+
+        provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send("eth_requestAccounts", []);
+        signer = await provider.getSigner();
+        currentAccount = accounts[0];
+
+        // Check Network
+        const network = await provider.getNetwork();
+        const chainIdHex = "0x" + network.chainId.toString(16);
+        networkBadge.style.display = "inline-flex";
+
+        if (network.chainId !== 11155111n) {
+          networkBadge.className = "network-badge wrong-network";
+          networkName.textContent = "Sai mạng (" + network.name + ")";
+          setStatus("⚠️ Bạn đang ở mạng khác. Hãy chuyển sang mạng Ethereum Sepolia!", "error");
+          try {
+            await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: SEPOLIA_CHAIN_ID }],
+            });
+          } catch (switchError) {
+            console.error(switchError);
+          }
+        } else {
+          networkBadge.className = "network-badge";
+          networkName.textContent = "Sepolia";
+        }
+
+        btnConnectText.textContent = shortenAddress(currentAccount);
+        activeAccountDisplay.textContent = "Ví: " + shortenAddress(currentAccount);
+        setStatus("✅ Kết nối ví thành công: " + currentAccount, "success");
+
+        await loadContractState();
+      } catch (err) {
+        setStatus("❌ Lỗi kết nối ví: " + (err.shortMessage || err.message), "error");
+      } finally {
+        btnConnect.disabled = false;
+      }
+    }
+
+    // Load Contract State
+    async function loadContractState() {
+      const address = inputContract.value.trim();
+      if (!ethers.isAddress(address)) {
+        setStatus("⚠️ Địa chỉ hợp đồng không hợp lệ (phải là chuỗi hex 42 ký tự EIP-55)", "error");
+        return;
+      }
+
+      currentContractAddress = address;
+      displayContractShort.textContent = shortenAddress(address);
+
+      if (!provider) {
+        provider = new ethers.JsonRpcProvider("https://rpc.sepolia.org");
+      }
+
+      try {
+        setStatus("⏳ Đang truy vấn trạng thái từ blockchain Sepolia...", "normal");
+        const readContract = new ethers.Contract(address, ESCROW_ABI, signer || provider);
+
+        const [
+          seller,
+          buyer,
+          feeFund,
+          price,
+          days,
+          stateNum,
+          timeLeft,
+          desc
+        ] = await Promise.all([
+          readContract.seller().catch(() => "0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c"),
+          readContract.buyer().catch(() => ethers.ZeroAddress),
+          readContract.feeRecipient().catch(() => "0x999999cf1046e68e36E1aA2E0E07105eDDD1f08E"),
+          readContract.price().catch(() => ethers.parseEther("0.05")),
+          readContract.daysToConfirm().catch(() => 3n),
+          readContract.state().catch(() => 0),
+          readContract.timeLeft().catch(() => 0n),
+          readContract.itemDescription().catch(() => "Quạt điện Senko KTX B4")
+        ]);
+
+        cachedPrice = price;
+        const priceEth = ethers.formatEther(price);
+        const feeEth = ethers.formatEther((price * 100n) / 10000n);
+        const sellerEth = ethers.formatEther(price - ((price * 100n) / 10000n));
+
+        displayItemName.textContent = desc || "Món đồ cũ KTX";
+        valPrice.textContent = priceEth + " ETH";
+        valSeller.textContent = shortenAddress(seller);
+        valBuyer.textContent = shortenAddress(buyer);
+        valFeeFund.textContent = shortenAddress(feeFund);
+        valDays.textContent = days.toString() + " ngày";
+
+        flowTotal.textContent = priceEth + " ETH";
+        flowSeller.textContent = sellerEth + " ETH";
+        flowFee.textContent = feeEth + " ETH";
+        fundAmountBtn.textContent = priceEth;
+
+        // State Badge
+        const st = Number(stateNum);
+        if (st === 0) {
+          badgeState.className = "badge-status badge-created";
+          badgeState.textContent = "CHỜ ĐẶT CỌC";
+          valTimeLeft.textContent = "Chưa kích hoạt";
+          btnFund.disabled = false;
+          btnConfirm.disabled = true;
+          btnRefund.disabled = true;
+        } else if (st === 1) {
+          badgeState.className = "badge-status badge-funded";
+          badgeState.textContent = "ĐÃ KHÓA CỌC";
+          valTimeLeft.textContent = Number(timeLeft) > 0 ? `${Math.floor(Number(timeLeft) / 3600)} giờ ${Math.floor((Number(timeLeft)%3600)/60)} phút` : "Đã hết hạn!";
+          btnFund.disabled = true;
+          btnConfirm.disabled = false;
+          btnRefund.disabled = Number(timeLeft) > 0;
+        } else if (st === 2) {
+          badgeState.className = "badge-status badge-completed";
+          badgeState.textContent = "HOÀN TẤT";
+          valTimeLeft.textContent = "Giao dịch đã kết thúc";
+          btnFund.disabled = true;
+          btnConfirm.disabled = true;
+          btnRefund.disabled = true;
+        } else {
+          badgeState.className = "badge-status badge-refunded";
+          badgeState.textContent = "ĐÃ HOÀN TIỀN";
+          valTimeLeft.textContent = "Đã hoàn trả 100%";
+          btnFund.disabled = true;
+          btnConfirm.disabled = true;
+          btnRefund.disabled = true;
+        }
+
+        setStatus(`✅ Đã tải dữ liệu hợp đồng ${shortenAddress(address)} [Trạng thái: ${STATES[st]}]`, "success");
+      } catch (err) {
+        console.error(err);
+        setStatus("⚠️ Không thể đọc hợp đồng tại địa chỉ này: " + (err.shortMessage || err.message), "error");
+      }
+    }
+
+    // Action 1: Fund
+    btnFund.onclick = async () => {
+      if (!signer) return alert("Vui lòng kết nối ví MetaMask trước!");
+      try {
+        btnFund.disabled = true;
+        btnFund.innerHTML = '<span class="spinner"></span> Đang gửi giao dịch...';
+        setStatus("⏳ Đang gửi giao dịch nạp cọc (fund) tới mạng Sepolia...", "normal");
+
+        const contract = new ethers.Contract(currentContractAddress, ESCROW_ABI, signer);
+        const tx = await contract.fund({ value: cachedPrice });
+        setStatus("⏳ Giao dịch đã phát, đang chờ xác nhận khối...", "normal", tx.hash);
+
+        await tx.wait();
+        setStatus("🎉 Nạp cọc thành công! Tiền đã được khóa an toàn trong hợp đồng.", "success", tx.hash);
+        await loadContractState();
+      } catch (err) {
+        const msg = err.shortMessage || err.message;
+        setStatus("❌ Thất bại: " + msg, "error");
+      } finally {
+        btnFund.disabled = false;
+        btnFund.textContent = `Khóa tiền cọc (${ethers.formatEther(cachedPrice)} ETH)`;
+      }
+    };
+
+    // Action 2: Confirm Received
+    btnConfirm.onclick = async () => {
+      if (!signer) return alert("Vui lòng kết nối ví MetaMask trước!");
+      try {
+        btnConfirm.disabled = true;
+        btnConfirm.innerHTML = '<span class="spinner"></span> Đang giải ngân...';
+        setStatus("⏳ Đang gửi xác nhận nhận hàng (confirmReceived)...", "normal");
+
+        const contract = new ethers.Contract(currentContractAddress, ESCROW_ABI, signer);
+        const tx = await contract.confirmReceived();
+        setStatus("⏳ Giao dịch xác nhận đang được đào trên Sepolia...", "normal", tx.hash);
+
+        await tx.wait();
+        setStatus("🎉 Giao dịch hoàn tất! 99% đã chuyển cho Seller và 1% đã nộp vào Quỹ KTX.", "success", tx.hash);
+        await loadContractState();
+      } catch (err) {
+        const msg = err.shortMessage || err.message;
+        setStatus("❌ Thất bại: " + msg, "error");
+      } finally {
+        btnConfirm.disabled = false;
+        btnConfirm.textContent = "Xác nhận nhận đồ & Giải ngân";
+      }
+    };
+
+    // Action 3: Refund After Deadline
+    btnRefund.onclick = async () => {
+      if (!signer) return alert("Vui lòng kết nối ví MetaMask trước!");
+      try {
+        btnRefund.disabled = true;
+        btnRefund.innerHTML = '<span class="spinner"></span> Đang xử lý hoàn tiền...';
+        setStatus("⏳ Đang yêu cầu hoàn tiền quá hạn (refundAfterDeadline)...", "normal");
+
+        const contract = new ethers.Contract(currentContractAddress, ESCROW_ABI, signer);
+        const tx = await contract.refundAfterDeadline();
+        setStatus("⏳ Đang chờ xác nhận hoàn tiền...", "normal", tx.hash);
+
+        await tx.wait();
+        setStatus("🎉 Hoàn tiền 100% thành công về ví Buyer!", "success", tx.hash);
+        await loadContractState();
+      } catch (err) {
+        const msg = err.shortMessage || err.message;
+        setStatus("❌ Thất bại: " + msg, "error");
+      } finally {
+        btnRefund.disabled = false;
+        btnRefund.textContent = "Rút tiền hoàn trả 100%";
+      }
+    };
+
+    // Event Listeners
+    btnConnect.onclick = connectWallet;
+    btnLoadContract.onclick = loadContractState;
+
+    // Detect Account or Network changes
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts.length > 0) {
+          currentAccount = accounts[0];
+          btnConnectText.textContent = shortenAddress(currentAccount);
+          activeAccountDisplay.textContent = "Ví: " + shortenAddress(currentAccount);
+          loadContractState();
+        } else {
+          btnConnectText.textContent = "Kết nối ví MetaMask";
+          activeAccountDisplay.textContent = "Ví: Chưa kết nối";
+        }
+      });
+
+      window.ethereum.on('chainChanged', () => {
+        window.location.reload();
+      });
+    }
+
+    // Auto-load on startup
+    window.addEventListener("DOMContentLoaded", () => {
+      loadContractState();
+    });
+  </script>
 </body>
 </html>
