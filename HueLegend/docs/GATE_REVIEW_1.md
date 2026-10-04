@@ -2,7 +2,7 @@
 
 - **Thời gian:** Buổi 12 (Tuần 2)
 - **Học phần:** Tiền điện tử & Hợp đồng thông minh (ECO2432)
-- **Nhóm thực hiện:** Ngô Thị Thủy Vân & Thành viên kỹ thuật
+- **Nhóm thực hiện:** Ngô Thị Thủy Vân & Ngô Quỳnh Trang
 - **Đối tượng đánh giá:** Codebase `contracts/HueLegend.sol`, tài liệu `docs/SPEC.md` và kế hoạch triển khai
 
 ---

@@ -17,7 +17,7 @@
 
 | STT | Họ và tên | Mã sinh viên | Địa chỉ ví Sepolia | Phân công nhiệm vụ chi tiết (Lab 8 – Lab 15) |
 |---|---|---|---|---|
-| **1** | **Ngô Thị Thủy Vân** | `23K4300068` | `0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f` | • Quản lý tài liệu ([REGISTRATION.md](REGISTRATION.md), [lab08.md](lab08.md), [docs/SPEC.md](docs/SPEC.md))<br>• Phát triển Giao diện Web DApp Web3 ([web/index.html](web/index.html))<br>• Tích hợp thư viện sinh mã QR Code động và trang tra cứu Consumer<br>• Thiết kế Slide báo cáo 5 trang ([docs/SLIDES.md](docs/SLIDES.md)) và Kịch bản Demo Live ([docs/PRESENTATION_PLAN.md](docs/PRESENTATION_PLAN.md)) |
+| **1** | **Ngô Thị Thủy Vân** | `23K4300068` | `0x82d022a704706B2f144863D619D7418F8a0f19A7` | • Quản lý tài liệu ([REGISTRATION.md](REGISTRATION.md), [lab08.md](lab08.md), [docs/SPEC.md](docs/SPEC.md))<br>• Phát triển Giao diện Web DApp Web3 ([web/index.html](web/index.html))<br>• Tích hợp thư viện sinh mã QR Code động và trang tra cứu Consumer<br>• Thiết kế Slide báo cáo 5 trang ([docs/SLIDES.md](docs/SLIDES.md)) và Kịch bản Demo Live ([docs/PRESENTATION_PLAN.md](docs/PRESENTATION_PLAN.md)) |
 | **2** | **Ngô Quỳnh Trang** | `23K4300041` | `0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c` | • Lập trình Smart Contract lõi [contracts/HueLegend.sol](contracts/HueLegend.sol)<br>• Cài đặt OpenZeppelin `AccessControl` & Tối ưu hóa Gas<br>• Viết bộ kiểm thử tự động Unit Tests [test/test_hue_legend.py](test/test_hue_legend.py)<br>• Thực nghiệm kiểm thử an toàn, Audit chéo codebase ([docs/AUDIT_REPORT.md](docs/AUDIT_REPORT.md))<br>• Triển khai Smart Contract lên mạng thử nghiệm Sepolia |
 
 ---

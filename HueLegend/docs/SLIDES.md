@@ -2,7 +2,7 @@
 
 - **Học phần:** Tiền điện tử & Hợp đồng thông minh (ECO2432)
 - **Tên dự án:** HueLegend — Nền tảng Truy xuất Nguồn gốc Đặc sản Cố đô Huế Trên Blockchain
-- **Nhóm thuyết trình:** Ngô Thị Thủy Vân & Thành viên Kỹ thuật (K57 Kinh tế Số)
+- **Nhóm thuyết trình:** Ngô Thị Thủy Vân & Ngô Quỳnh Trang (K57 Kinh tế Số)
 
 ---
 
@@ -10,7 +10,7 @@
 - **Tiêu đề lớn:** HUELEGEND — BẢO CHỨNG NGUỒN GỐC ĐẶC SẢN CỐ ĐÔ HUẾ TRÊN BLOCKCHAIN
 - **Đề tài:** Chủ đề 10 (Chuỗi cung ứng & Truy xuất nguồn gốc OCOP)
 - **Thành viên nhóm:**
-  - **Ngô Thị Thủy Vân (MSSV: 23K4300068):** Thành viên, Quản trị Sản phẩm & Frontend Web3 DApp.
+  - **Ngô Thị Thủy Vân (MSSV: 23K4300068):** Thành viên, Quản trị Sản phẩm & Frontend Web3 DApp (Ví: `0x82d022a704706B2f144863D619D7418F8a0f19A7`).
   - **Ngô Quỳnh Trang (MSSV: 23K4300041):** Thành viên, Kỹ sư Hợp đồng thông minh & An ninh On-chain (Ví: `0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c`).
 - **Tuyên ngôn định danh sản phẩm (Value Proposition):**  
   > *"Số hóa và bảo chứng tính nguyên bản của đặc sản Huế thông qua chuỗi khối phân tán bất biến — Quét mã QR, an tâm chất lượng chuẩn di sản."*

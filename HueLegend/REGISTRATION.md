@@ -18,7 +18,7 @@ Nhóm thực hiện gồm 02 sinh viên theo đúng mô hình phân công của 
 
 | STT | Họ và tên | Mã sinh viên | Vai trò trong dự án | Trách nhiệm chính qua các Lab |
 |---|---|---|---|---|
-| 1 | **Ngô Thị Thủy Vân** | `23K4300068` | **Thành viên — Quản trị Sản phẩm & Frontend Web3** | • Quản lý tài liệu (`REGISTRATION.md`, `README.md`, Slide báo cáo)<br>• Phát triển Giao diện Web DApp, tích hợp sinh mã QR Code động (Lab 15)<br>• Xây dựng trải nghiệm tra cứu cho người tiêu dùng (Consumer View)<br>• Chuẩn bị kịch bản thuyết trình và Demo Live |
+| 1 | **Ngô Thị Thủy Vân** | `23K4300068` | **Thành viên — Quản trị Sản phẩm & Frontend Web3** (Ví: `0x82d022a704706B2f144863D619D7418F8a0f19A7`) | • Quản lý tài liệu (`REGISTRATION.md`, `README.md`, Slide báo cáo)<br>• Phát triển Giao diện Web DApp, tích hợp sinh mã QR Code động (Lab 15)<br>• Xây dựng trải nghiệm tra cứu cho người tiêu dùng (Consumer View)<br>• Chuẩn bị kịch bản thuyết trình và Demo Live |
 | 2 | **Ngô Quỳnh Trang** | `23K4300041` | **Thành viên — Kỹ sư Hợp đồng thông minh & An ninh On-chain (Ví: 0x2e4216e1BCA81d308b25adaD6ef5Ea92E2e42F8c)** | • Lập trình Smart Contract `HueLegend.sol` (Lab 9 - 11)<br>• Thiết lập phân quyền OpenZeppelin `AccessControl` & tối ưu Gas<br>• Viết kịch bản kiểm thử tự động Unit Tests (Lab 13)<br>• Thực nghiệm kiểm thử an toàn, Audit chéo codebase (Lab 14)<br>• Triển khai (Deploy) hợp đồng lên Sepolia Testnet |
 
 ---
